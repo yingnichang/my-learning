@@ -77,6 +77,11 @@ body{margin:0;background:#f4f7fb;color:var(--ink);font:16px/1.55 "Segoe UI",Aria
 .source-copy summary span{color:#8595a8;font-size:12px}
 .source-copy details p{margin:-3px 0 18px;color:#617287}
 .flashcard-page{max-width:890px}
+.flashcard-deck-switcher{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 18px}
+.flashcard-deck-button{display:flex;min-height:58px;padding:12px 16px;align-items:center;justify-content:space-between;border:1px solid #bfd0e2;background:white;color:#24466d;cursor:pointer;font-weight:800;text-align:left}
+.flashcard-deck-button span{padding:5px 8px;background:#edf4fb;color:#52708e;font:700 10px/1 monospace;text-transform:uppercase}
+.flashcard-deck-button.active{border-color:#1f548e;background:#1f548e;color:white}
+.flashcard-deck-button.active span{background:#ffffff24;color:white}
 .flashcard-meta{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-bottom:16px;color:#607186;font:12px monospace}
 .progress-track{height:3px;background:#d6e0eb}
 .progress-track span{display:block;height:100%;background:#d9a52e}
@@ -101,6 +106,9 @@ body{margin:0;background:#f4f7fb;color:var(--ink);font:16px/1.55 "Segoe UI",Aria
 .formula-panel div+div{border-top:1px solid #ffffff29;border-left:0}
 }
 @media(max-width:680px){.spotlight-grid,.concept-grid{grid-template-columns:1fr}
+.flashcard-deck-switcher{grid-template-columns:1fr}
+.flashcard-meta{grid-template-columns:auto 1fr}
+.flashcard-meta>span:last-child{grid-column:1/-1}
 .guide-section{grid-template-columns:1fr;gap:16px}
 .source-card{grid-template-columns:1fr}
 .source-index{padding:13px 20px;text-align:left}
