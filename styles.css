@@ -159,6 +159,16 @@ body{margin:0;background:#f4f7fb;color:var(--ink);font:16px/1.55 "Segoe UI",Aria
 .lesson-notes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .lesson-notes p{margin:0;padding:15px;border-left:3px solid #e1ad3d;background:#fff8e7;color:#655d4c;font-size:13px}
 .lesson-notes p:nth-child(even){border-color:#4580b9;background:#edf5fc;color:#4e6279}
+.guide-stats{grid-column:1/-1;padding:10px 14px;border:1px solid #cbd8e6;background:#f7fafc;color:#48627f;font:700 11px/1.4 sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.module-button[data-count]:after{content:attr(data-count);display:inline-grid;min-width:21px;height:21px;margin-left:8px;padding:0 5px;place-items:center;border-radius:20px;background:#dce9f6;color:#255684;font:700 10px/1 monospace}
+.module-button.active[data-count]:after{background:#fff;color:#164779}
+.module-index{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.module-index span{padding:7px 10px;border:1px solid #cbd8e6;background:#f7fafc;color:#56708c;font:700 10px/1.2 sans-serif;letter-spacing:.07em;text-transform:uppercase}
+.lesson-source{display:flex;justify-content:space-between;gap:16px;margin:16px 0 0;padding:9px 12px;border-left:3px solid #d9a93c;background:#fff9e9;color:#675b3d;font-size:12px}
+.lesson-source span{font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.prose-equation{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:14px;line-height:1.75;white-space:normal}
+.detailed-lesson .lesson-notes p b{display:block;margin-bottom:5px;color:inherit;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.detailed-lesson[open]>summary{background:#f8fbfe}
 .review-sheet{padding:34px;border:1px solid #cbd8e6;background:white}
 .review-sheet h2{margin:0 0 25px;color:#17385f;font:500 36px Georgia}
 .review-flow{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line)}
