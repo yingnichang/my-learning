@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="MTH 9875 The Volatility Surface study hub: Lecture 1 stylized facts and Lecture 2 stochastic, rough, and local volatility.">
+<title>MTH 9875 · The Volatility Surface</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']]}};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{
+ --ink:#10283a;--muted:#61717c;--line:#d9e5e5;--paper:#f4f8f8;--panel:#ffffff;
+ --teal:#147d78;--teal2:#0e625f;--blue:#315b7d;--gold:#a36a17;--rose:#8b4e5c;
+ --soft:#e9f5f3;--shadow:0 14px 38px rgba(16,40,58,.09)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink)}
+button,input{font:inherit}
+a{color:inherit}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:268px;background:#0f2d34;color:#edf7f5;padding:24px 18px;overflow:auto;z-index:20}
+.brand{display:flex;gap:12px;align-items:center;margin-bottom:22px}.brand-mark{width:44px;height:44px;border-radius:13px;background:#1c8a84;display:grid;place-items:center;font-size:22px;font-weight:800}.brand strong{display:block;font-size:18px}.brand span{display:block;color:#a9c7c5;font-size:12px;margin-top:2px}
+.back{display:block;text-decoration:none;color:#c2d9d7;font-size:12px;margin:0 0 18px;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:10px}.back:hover{background:rgba(255,255,255,.06)}
+.nav-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8cb4b1;margin:18px 10px 8px}
+.nav-button{width:100%;border:0;background:transparent;color:#d9ecea;text-align:left;padding:11px 12px;border-radius:10px;cursor:pointer;font-weight:700;display:flex;gap:10px;align-items:center}.nav-button:hover,.nav-button.active{background:#1b464b;color:#fff}
+.sidebar-note{margin-top:22px;padding:14px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.035)}.sidebar-note span{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8cb4b1}.sidebar-note strong{display:block;margin-top:6px}.sidebar-note p{margin:6px 0 0;color:#c2d9d7;font-size:12px;line-height:1.45}.sidebar-footer{margin-top:22px;color:#8cb4b1;font-size:11px}
+.mobile-header{display:none}
+.main{margin-left:268px;min-height:100vh}
+.page{display:none;max-width:1180px;margin:0 auto;padding:48px 44px 80px}.page.active{display:block}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--teal);font-weight:900;margin:0 0 10px}
+.page-heading h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(38px,5vw,64px);line-height:1.02;margin:0}.page-intro{color:var(--muted);font-size:18px;line-height:1.65;max-width:850px}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;margin-top:28px}.hero-card,.content-card,.notes-card,.flashcard-panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.hero-card{padding:26px}.hero-card.teal{background:linear-gradient(150deg,#0f6b66,#174e54);color:#fff;border-color:transparent}.hero-card h2{font-family:Georgia,"Times New Roman",serif;font-size:30px;margin:10px 0}.hero-card p{line-height:1.65}.hero-card .chain{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,255,255,.1);padding:13px;border-radius:12px;line-height:1.65}
+.hero-card.light ul{padding-left:18px;line-height:1.8;color:var(--muted)}
+.content-card{padding:24px;margin-top:22px}.content-card h2{font-family:Georgia,"Times New Roman",serif;font-size:28px;margin:0 0 10px}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.timeline article{background:#f8fbfb;border:1px solid var(--line);padding:15px;border-radius:14px}.timeline span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:800}.timeline h3{font-size:16px;margin:7px 0}.timeline p{font-size:13px;color:var(--muted);line-height:1.5}
+.guide-toolbar{display:flex;justify-content:space-between;gap:16px;align-items:end;position:sticky;top:0;background:linear-gradient(var(--paper) 78%,rgba(244,248,248,0));padding:10px 0 18px;z-index:8}.lecture-switch{display:flex;gap:6px;padding:5px;background:#e4eeee;border-radius:12px}.lecture-switch button{border:0;background:transparent;padding:10px 14px;border-radius:9px;font-weight:800;color:#54706f;cursor:pointer}.lecture-switch button.active{background:#fff;color:var(--teal2);box-shadow:0 3px 12px rgba(16,40,58,.08)}.search label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px}.search input{width:310px;max-width:40vw;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.module{display:none}.module.active{display:block}.module-intro{background:linear-gradient(135deg,#edf7f5,#f8fbfb);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px}.module-intro h2{font-family:Georgia,"Times New Roman",serif;font-size:31px;margin:0 0 8px}.module-intro p{color:var(--muted);line-height:1.6}.module-path{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.module-path span{padding:7px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:750}
+.lesson{background:#fff;border:1px solid var(--line);border-radius:16px;margin:12px 0;overflow:hidden}.lesson[open]{box-shadow:var(--shadow)}.lesson summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;padding:17px 18px}.lesson summary::-webkit-details-marker{display:none}.lesson-num{width:38px;height:38px;border-radius:11px;background:var(--soft);color:var(--teal2);display:grid;place-items:center;font-weight:900}.lesson summary small{display:block;text-transform:uppercase;letter-spacing:.09em;color:var(--teal);font-size:10px;font-weight:850;margin-bottom:4px}.lesson summary strong{font-size:17px}.lesson summary em{font-style:normal;font-size:11px;color:#7b8b92;border:1px solid var(--line);padding:6px 8px;border-radius:999px}
+.lesson-body{padding:0 18px 20px}.layer{border-left:4px solid var(--line);padding:12px 14px;margin:10px 0;background:#fbfdfd;border-radius:0 12px 12px 0}.layer h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.layer p{margin:6px 0;line-height:1.62;color:#405562}.observation{border-left-color:var(--blue)}.intuition{border-left-color:var(--teal)}.math{border-left-color:var(--gold)}.consequence{border-left-color:var(--rose)}
+.eq{margin:10px 0;padding:13px 14px;border-radius:12px;background:#f4f6f7;border:1px solid #e2e8e9;overflow-x:auto}.eq strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6a747b;margin-bottom:6px}
+.steps{margin:12px 0;border:1px solid #e5dcc7;background:#fffaf0;border-radius:13px;padding:14px}.steps h5{margin:0 0 10px;color:#85580e;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.steps ol{margin:0;padding-left:20px}.steps li{margin:8px 0;line-height:1.58;color:#4b5155}.remember{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.remember div{padding:12px;border-radius:12px;background:#f7faf9;border:1px solid var(--line);font-size:13px;line-height:1.5}.remember b{display:block;color:var(--teal2);margin-bottom:4px}
+.notes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.notes-card{padding:22px}.notes-card h2{font-family:Georgia,"Times New Roman",serif;margin:6px 0 8px}.notes-card p{color:var(--muted);line-height:1.55}.notes-card a{display:inline-flex;margin-top:10px;text-decoration:none;background:var(--teal);color:white;padding:10px 12px;border-radius:10px;font-weight:800}.notes-card .meta{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:800}
+.flash-controls{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.flash-controls button{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:800}.flash-controls button.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.flashcard-panel{padding:24px;min-height:280px;display:grid;place-items:center;text-align:center}.flashcard{max-width:760px}.flashcard .tag{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--teal);font-weight:900}.flashcard h2{font-family:Georgia,"Times New Roman",serif;font-size:32px;margin:12px 0}.flashcard p{font-size:18px;line-height:1.65;color:#405562}.flash-actions{display:flex;gap:8px;justify-content:center;margin-top:18px}.flash-actions button{border:0;padding:10px 14px;border-radius:10px;background:#0f2d34;color:#fff;font-weight:800;cursor:pointer}.flash-actions .secondary{background:#dfe9e8;color:#254f4d}
+.hidden{display:none!important}
+@media(max-width:980px){.sidebar{display:none}.mobile-header{display:flex;position:sticky;top:0;background:#0f2d34;color:#fff;padding:12px 16px;z-index:30;justify-content:space-between;align-items:center}.main{margin-left:0}.page{padding:30px 20px 60px}.hero-grid,.notes-grid{grid-template-columns:1fr}.timeline{grid-template-columns:1fr 1fr}.guide-toolbar{top:49px;align-items:stretch;flex-direction:column}.search input{max-width:none;width:100%}}
+@media(max-width:620px){.timeline{grid-template-columns:1fr}.lesson summary{grid-template-columns:42px 1fr}.lesson summary em{display:none}.remember{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <a class="back" href="index.html">← All courses</a>
+  <div class="brand"><div class="brand-mark">σ</div><div><strong>MTH 9875</strong><span>The Volatility Surface</span></div></div>
+  <p class="nav-label">Course notebook</p>
+  <nav>
+    <button class="nav-button active" data-section="overview">⌂ Course overview</button>
+    <button class="nav-button" data-section="guide">▣ Study guide</button>
+    <button class="nav-button" data-section="notes">▤ Lecture notes</button>
+    <button class="nav-button" data-section="flashcards">◈ Flashcards</button>
+  </nav>
+  <div class="sidebar-note"><span>Current coverage</span><strong>Lectures 1–2</strong><p>Stylized facts → stochastic volatility → rough volatility → local volatility.</p></div>
+  <div class="sidebar-footer">Jim Gatheral · Fall 2026 · Baruch MFE</div>
+</aside>
+<header class="mobile-header"><a href="index.html" style="color:white;text-decoration:none">← Courses</a><strong>MTH 9875</strong></header>
+
+<main class="main">
+<section class="page active" id="overview">
+  <header class="page-heading"><p class="eyebrow">MTH 9875 · Fall 2026</p><h1>The Volatility Surface</h1><p class="page-intro">The first two lectures build one continuous argument: empirical market data reject constant-volatility thinking; stochastic volatility explains changing variance and smiles; rough volatility explains the observed short-time scaling; local volatility shows how a vanilla option surface can be represented by a state-dependent diffusion.</p></header>
+  <div class="hero-grid">
+    <article class="hero-card teal"><p class="eyebrow" style="color:#b8e8e3">Course backbone</p><h2>Data → model restriction → option surface</h2><div class="chain">Stylized facts → random variance → stochastic volatility → roughness → P vs Q → Heston → Dupire local volatility → implied-volatility geometry</div><p>The guiding rule is not to memorize isolated equations. For each one, ask what empirical fact motivates it, what assumption is being made, and what observable quantity it helps explain.</p></article>
+    <article class="hero-card light"><p class="eyebrow">How to use this site</p><h2>Four learning layers</h2><ul><li><b>Observation:</b> what the data or option market shows.</li><li><b>Intuition:</b> why the phenomenon occurs.</li><li><b>Mathematics:</b> the formula and derivation.</li><li><b>Modeling consequence:</b> what a valid volatility model must reproduce.</li></ul></article>
+  </div>
+  <section class="content-card"><h2>Lecture 1–2 map</h2><div class="timeline">
+    <article><span>Lecture 1A</span><h3>Empirical facts</h3><p>Power laws, fat tails, volatility clustering, leverage, business time.</p></article>
+    <article><span>Lecture 1B</span><h3>Surface facts</h3><p>Smile/skew, short-dated explosion, skew stickiness, volatility envelope.</p></article>
+    <article><span>Lecture 2A</span><h3>Dynamic models</h3><p>Random variance, roughness, P/Q measures, Heston and volatility risk.</p></article>
+    <article><span>Lecture 2B</span><h3>Local volatility</h3><p>Dupire equation, conditional variance interpretation, implied-vol formula, BBF.</p></article>
+  </div></section>
+</section>
+
+<section class="page" id="guide">
+<header class="page-heading"><p class="eyebrow">Detailed layered reference</p><h1>Study guide</h1><p class="page-intro">Each mini-lesson is written as Observation → Intuition → Mathematics → Modeling consequence. Worked calculations appear directly inside the relevant lesson.</p></header>
+<div class="guide-toolbar">
+  <div class="lecture-switch"><button class="active" data-module="l1">Lecture 1</button><button data-module="l2">Lecture 2</button></div>
+  <div class="search"><label for="lesson-search">Filter lessons</label><input id="lesson-search" type="search" placeholder="Try: power law, Hurst, Dupire, Heston…"></div>
+</div>
+
+<div class="module active" data-module-panel="l1">
+  <div class="module-intro"><h2>Lecture 1 · Stylized facts</h2><p>The lecture begins from data. The goal is to identify empirical regularities that any useful volatility model must respect.</p><div class="module-path"><span>Power laws</span><span>Returns</span><span>Volatility clustering</span><span>Roughness</span><span>Smile/skew</span><span>SSR</span></div></div>
+
+  <details class="lesson" open data-keywords="power law tail density exponent">
+    <summary><span class="lesson-num">01</span><span><small>Power laws</small><strong>Tail probability versus density</strong></span><em>Core concept</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Many financial and economic quantities have tails that decay much more slowly than a Gaussian tail.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A power law has no single characteristic scale in the tail. Very large observations remain materially more likely than under an exponential or Gaussian decay.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq"><strong>Tail law</strong>\[P(X>x)\sim Cx^{-\zeta}.\]</div><p>If the tail probability behaves like (x^{-\zeta}), then the density behaves like (x^{-(\zeta+1)}).</p>
+      <div class="steps"><h5>Worked derivation</h5><ol><li>Start from (P(X>x)\approx Cx^{-\zeta}).</li><li>The density is (f(x)=-\frac{d}{dx}P(X>x)).</li><li>Differentiate: (-\frac{d}{dx}(Cx^{-\zeta})=C\zeta x^{-(\zeta+1)}).</li><li>So the tail exponent is (zeta), while the density exponent is (zeta+1).</li></ol></div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Always check what is plotted. A log-log slope near (-3) for a tail probability corresponds to roughly (-4) for the density.</p></div>
+      <div class="remember"><div><b>Remember</b>Tail exponent and density exponent differ by one.</div><div><b>Common trap</b>Reading a histogram slope as if it were a survival-function slope.</div></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="power law algebra transformation sum minimum maximum">
+    <summary><span class="lesson-num">02</span><span><small>Power-law algebra</small><strong>How exponents transform</strong></span><em>Worked rules</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>The fattest tail dominates sums and maxima. Transformations such as (Y=X^\alpha) rescale the exponent.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\zeta_{X_1+\cdots+X_n}=\min_i\zeta_i,\qquad \zeta_{\max(X_i)}=\min_i\zeta_i.\]</div><div class="eq">\[Y=X^\alpha\quad\Rightarrow\quad \zeta_Y=\frac{\zeta_X}{\alpha}.\]</div>
+      <div class="steps"><h5>Worked derivation of (Y=X^\alpha)</h5><ol><li>(P(Y>y)=P(X^\alpha>y)).</li><li>For (alpha>0), this is (P(X>y^{1/\alpha})).</li><li>Use the tail law: (P(X>x)\sim x^{-\zeta_X}).</li><li>Then (P(Y>y)\sim (y^{1/\alpha})^{-\zeta_X}=y^{-\zeta_X/\alpha}).</li><li>Therefore (zeta_Y=\zeta_X/\alpha).</li></ol></div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>This algebra lets one connect power laws across trade size, market impact, firm size, and returns without refitting every relation from scratch.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="pareto 80 20 zipf wealth alpha">
+    <summary><span class="lesson-num">03</span><span><small>Pareto / Zipf</small><strong>Why 80/20 implies an exponent near one</strong></span><em>Worked calculation</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Income, wealth, city size, and firm size often display extreme concentration.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[W=P^{1-1/\alpha}.\]</div>
+      <div class="steps"><h5>Worked 80/20 calculation</h5><ol><li>Set (P=0.2) and (W=0.8).</li><li>(0.8=0.2^{1-1/\alpha}).</li><li>Take logs: (log 0.8=(1-1/\alpha)log 0.2).</li><li>Divide: (1-1/\alpha=\log(0.8)/\log(0.2)\approx0.13865).</li><li>So (1/\alpha\approx0.86135).</li><li>(alpha\approx1/0.86135\approx1.161).</li></ol></div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>An exponent only modestly above one means an extremely fat tail and severe concentration.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="returns log return gaussian student t cubic law">
+    <summary><span class="lesson-num">04</span><span><small>Returns</small><strong>Log returns are not Gaussian</strong></span><em>Empirical foundation</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>SPX daily log returns have a sharper center and much fatter tails than a normal distribution.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[r_t=\log\frac{S_t}{S_{t-1}}.\]</div><div class="eq">\[P(|r|>x)\sim x^{-3}\quad\Rightarrow\quad f(r)\sim |r|^{-4}.\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A Student-(t) with about three degrees of freedom mimics this empirical tail behavior much better than a Gaussian.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>A constant-volatility Gaussian model cannot reproduce the empirical frequency of extreme daily moves.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="power law infinity exponential moment stock price finite moment">
+    <summary><span class="lesson-num">05</span><span><small>Tail truncation</small><strong>Why a financial power law cannot continue forever</strong></span><em>Conceptual proof</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>Stock prices are exponentials of log returns. If positive log-return tails stayed power-law forever, exponential moments could blow up.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[S=e^X,\qquad E[S]=E[e^X].\]</div><p>A polynomially decaying positive tail is not enough to control the exponential factor (e^X) at infinity.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Interpret empirical “power law” as scaling over a substantial range, not as a literal law from zero to infinity.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="autocorrelation return volatility clustering absolute squared">
+    <summary><span class="lesson-num">06</span><span><small>Stylized facts</small><strong>Returns are hard to predict; volatility is persistent</strong></span><em>Core intuition</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Raw returns have little serial correlation, while (|r_t|) and (r_t^2) exhibit persistent autocorrelation.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The sign of tomorrow’s return is difficult to forecast, but the scale of tomorrow’s move is much more predictable.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Volatility itself should be a state variable with persistence. This is the empirical motivation for stochastic volatility.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="business time integrated variance random clock">
+    <summary><span class="lesson-num">07</span><span><small>Business time</small><strong>Integrated variance as a random clock</strong></span><em>Bridge to SV</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>A calendar day can contain very different amounts of “financial time.” Quiet days are short in business time; crisis days are long.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\tau(t)=\int_0^t v_s\,ds.\]</div><p>Conditionally on a path of variance, Brownian returns accumulate variance according to this random clock.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Mixtures of Gaussian returns with different realized variances naturally create a high central peak and fat unconditional tails.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="conditional gaussian stochastic volatility mixture">
+    <summary><span class="lesson-num">08</span><span><small>Conditional Gaussianity</small><strong>Why random variance creates fat tails</strong></span><em>Key bridge</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>Inside each volatility regime, returns may look close to Gaussian. Mixing low- and high-volatility regimes makes the unconditional distribution sharply peaked with fat tails.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\frac{dS_t}{S_t}=\sqrt{V_t}\,dZ_t.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Instead of forcing one exotic static return distribution, model a random, persistent variance process.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="cont stylized facts leverage volume volatility asymmetry">
+    <summary><span class="lesson-num">09</span><span><small>Cont stylized facts</small><strong>The checklist a volatility model should respect</strong></span><em>Review map</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Key facts include weak return autocorrelation, heavy tails, intermittency, volatility clustering, slow decay of volatility dependence, leverage, conditional heavy tails, and volume-volatility correlation.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>A model that fits one option smile but destroys these dynamics is descriptively incomplete.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="leverage effect vix negative correlation skew">
+    <summary><span class="lesson-num">10</span><span><small>Leverage effect</small><strong>Why price declines and volatility rises are linked</strong></span><em>Surface connection</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Equity-index price moves and volatility changes are strongly negatively related.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\operatorname{Corr}(d\log S_t,d\log V_t)<0.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Negative spot-vol correlation is a primary source of negative equity implied-volatility skew in stochastic-volatility models.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="rough volatility hurst h scaling realized variance structure function">
+    <summary><span class="lesson-num">11</span><span><small>Rough volatility</small><strong>The Hurst exponent and scaling</strong></span><em>Core concept</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Log realized variance increments display power-law scaling across time horizons.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[E\left[|\log V_{t+\Delta}-\log V_t|^q\right]\propto \Delta^{qH}.\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>(H=1/2) is Brownian roughness. Empirical estimates well below (1/2) imply even more jagged volatility paths.</p></div>
+      <div class="steps"><h5>How (H) is estimated</h5><ol><li>Choose moments (q).</li><li>For each lag (Delta), compute the empirical (q)-th absolute moment of log-vol increments.</li><li>Take logs: (log m_q(\Delta)=a_q+\zeta_q\log\Delta).</li><li>The slope gives (zeta_q).</li><li>Under monofractal scaling, (zeta_q=qH), so regress (zeta_q) on (q) through the origin to estimate (H).</li></ol></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Conventional smooth Markovian volatility diffusions miss this short-scale roughness.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="volatility surface smile skew implied volatility log moneyness">
+    <summary><span class="lesson-num">12</span><span><small>Volatility surface</small><strong>From flat Black–Scholes vol to market smiles</strong></span><em>Option data</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Equity implied volatility depends on strike and maturity. Lower strikes usually trade at higher implied volatility.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[k=\log(K/F),\qquad \sigma_{\mathrm{imp}}=\sigma_{\mathrm{imp}}(k,T).\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>A useful model must fit not only one volatility level but the cross-sectional shape and its dynamics.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="short maturity skew scaling t -0.23">
+    <summary><span class="lesson-num">13</span><span><small>Short-dated skew</small><strong>Power-law explosion of ATM skew</strong></span><em>Empirical restriction</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\text{ATM Skew}(T)=\left.\frac{\partial\sigma_{\mathrm{imp}}(k,T)}{\partial k}\right|_{k=0},\qquad |\text{Skew}(T)|\sim T^{-\gamma}.\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Short expiries react most violently to near-term downside risk, so the skew steepens as maturity shrinks.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>The observed short-time exponent is a direct restriction on admissible volatility dynamics and is one of the main empirical arguments for rough volatility.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="skew stickiness ratio ssr sticky strike sticky delta beta psi">
+    <summary><span class="lesson-num">14</span><span><small>Surface dynamics</small><strong>Skew-stickiness ratio</strong></span><em>Dynamics test</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>ATM implied volatility co-moves with spot in a fairly stable way across expiries on a given day.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[R(T)=\frac{\beta(T)}{\psi(T)}.\]</div><p>Here (psi(T)) is ATM strike skew and (eta(T)) is the spot/ATM-vol regression coefficient in quadratic-covariation form.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Sticky delta gives (R=0); sticky strike gives (R=1). Empirical values are neither extreme and are roughly expiry-independent on a given day.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Matching a static smile is insufficient: the model must also reproduce how that smile moves when spot moves.</p></div>
+    </div>
+  </details>
+</div>
+
+<div class="module" data-module-panel="l2">
+  <div class="module-intro"><h2>Lecture 2 · Stochastic, rough, and local volatility</h2><p>This lecture turns Lecture 1’s empirical restrictions into modeling machinery.</p><div class="module-path"><span>SV motivation</span><span>Mixture intuition</span><span>Roughness</span><span>P vs Q</span><span>Heston</span><span>Dupire</span><span>BBF</span></div></div>
+
+  <details class="lesson" open data-keywords="stochastic volatility motivation smiles arbitrage free exotic">
+    <summary><span class="lesson-num">15</span><span><small>Stochastic volatility</small><strong>Why go beyond Black–Scholes?</strong></span><em>Motivation</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Volatility fluctuates through time and vanilla option prices imply smiles, not a flat volatility.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Black–Scholes can still be a quoting formula, but its single-volatility world is not a realistic joint model for spot and option dynamics.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\frac{dS_t}{S_t}=\sqrt{V_t}\,dZ_t,\qquad V_t=\frac{d}{dt}\langle\log S\rangle_t.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>SV models can generate realistic smiles while preserving arbitrage-free dynamics, making them more coherent for exotic-option pricing and hedging.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="mixture gaussian regimes fat tails central peak random variance">
+    <summary><span class="lesson-num">16</span><span><small>Mixture intuition</small><strong>Why random volatility creates fat tails</strong></span><em>Toy model</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>Low-volatility regimes create the sharp center; high-volatility regimes create the fat tails. Mixing them reproduces the stylized shape of return histograms.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[f(x)=\tfrac12\phi(x;0,0.1^2)+\tfrac12\phi(x;0,0.3^2).\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Variance should be random and persistent, not a one-off jump variable.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="stationary variance mean reversion long run">
+    <summary><span class="lesson-num">17</span><span><small>Variance dynamics</small><strong>Why variance should be stationary in the long run</strong></span><em>Economic argument</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>If volatility had no long-run restoring force, the distribution of a large company’s volatility decades ahead would drift to absurdly tiny or huge values. Mean reversion keeps long-run variance economically plausible.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Classical models such as Heston build stationarity through mean-reverting variance dynamics.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="fractional brownian motion hurst covariance h rough">
+    <summary><span class="lesson-num">18</span><span><small>Fractional Brownian motion</small><strong>How (H) changes dependence and roughness</strong></span><em>Rough-vol basis</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[E[W_t^H W_s^H]=\tfrac12\big(|t|^{2H}+|s|^{2H}-|t-s|^{2H}\big).\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>(H=1/2) gives Brownian motion; (H>1/2) gives positively correlated increments; (H<1/2) gives negatively correlated increments and rougher paths.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Rough-vol models use fractional-type behavior for volatility, not for the tradable stock price itself.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="p measure q measure physical risk neutral equity premium">
+    <summary><span class="lesson-num">19</span><span><small>Measures</small><strong>(P) versus (Q): forecasting versus pricing</strong></span><em>Essential distinction</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>(P) describes real-world statistical evolution; (Q) is the pricing measure under which discounted tradable asset prices are martingales.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq"><strong>Under (P)</strong>\[\frac{dS_t}{S_t}=\mu_t\,dt+\sqrt{V_t}\,dZ_t^P.\]</div><div class="eq"><strong>Under (Q), with zero rates</strong>\[\frac{dS_t}{S_t}=\sqrt{V_t}\,dZ_t^Q.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Historical volatility forecasting is a (P)-problem; vanilla and exotic option pricing is primarily a (Q)-problem.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="log utility optimal fraction equity risk premium beta variance girsanov">
+    <summary><span class="lesson-num">20</span><span><small>Risk premium</small><strong>Why the equity risk premium can be proportional to variance</strong></span><em>Worked derivation</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><p>With fraction (pi_t) of wealth in stock,</p><div class="eq">\[\frac{dW_t}{W_t}=\pi_t\mu_tdt+\pi_t\sqrt{V_t}\,dZ_t^P.\]</div>
+      <div class="steps"><h5>Worked log-utility optimization</h5><ol><li>Apply Itô to (log W_t): [d\log W_t=(\pi_t\mu_t-\tfrac12\pi_t^2V_t)dt+\pi_t\sqrt{V_t}dZ_t^P.]</li><li>The instantaneous expected growth rate is (g(\pi)=\pi\mu-\tfrac12\pi^2V).</li><li>Differentiate: (g'(\pi)=\mu-\pi V).</li><li>Set to zero: (pi^*=\mu/V).</li><li>If the optimal share (pi^*=1/\beta) is constant, then (mu=\beta V).</li></ol></div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>This motivates a Girsanov shift proportional to (sqrt V), linking (P)- and (Q)-dynamics.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="girsanov change measure beta stock martingale">
+    <summary><span class="lesson-num">21</span><span><small>Change of measure</small><strong>Girsanov shift from (P) to (Q)</strong></span><em>Worked substitution</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[dZ_t^Q=dZ_t^P+\beta\sqrt{V_t}\,dt.\]</div>
+      <div class="steps"><h5>Why the drift disappears</h5><ol><li>Start under (P): (dS/S=\beta Vdt+\sqrt V,dZ^P).</li><li>Rearrange the measure change: (dZ^P=dZ^Q-\beta\sqrt Vdt).</li><li>Substitute: (dS/S=\beta Vdt+\sqrt V(dZ^Q-\beta\sqrt Vdt)).</li><li>The drift terms cancel: (eta Vdt-\beta Vdt=0).</li><li>Hence (dS/S=\sqrt V,dZ^Q), making (S) a (Q)-martingale when rates are zero.</li></ol></div></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="heston variance mean reversion rho eta lambda">
+    <summary><span class="lesson-num">22</span><span><small>Classical Heston</small><strong>Mean-reverting square-root variance</strong></span><em>Canonical SV model</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[dV_t=-\lambda(V_t-\bar V)dt+\eta\sqrt{V_t}\,dW_t,\qquad d\langle W,Z\rangle_t=\rho,dt.\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>(lambda) controls mean-reversion speed, (ar V) the long-run variance, (eta) vol-of-vol, and (ho) spot-vol correlation. Negative (ho) creates negative equity skew.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Heston is analytically convenient and economically interpretable, but conventional Heston does not reproduce the empirical short-time rough scaling well.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="heston change measure lambda p q rho eta">
+    <summary><span class="lesson-num">23</span><span><small>Heston under (P) and (Q)</small><strong>How the variance parameters change</strong></span><em>Measure effect</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq"><strong>Under (P)</strong>\[dV_t=-\lambda^P(V_t-\bar V^P)dt+\eta\sqrt{V_t},dW_t^P.\]</div><div class="eq"><strong>Under (Q)</strong>\[dV_t=-\lambda^Q(V_t-\bar V^Q)dt+\eta\sqrt{V_t},dW_t^Q.\]</div><div class="eq">\[\lambda^Q=\lambda^P+\rho\eta,\qquad \lambda^Q\bar V^Q=\lambda^P\bar V^P.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Option markets reveal (Q)-parameters. Historical estimation reveals (P)-parameters. Their difference is volatility risk compensation.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="local volatility philosophy derman kani dupire effective theory">
+    <summary><span class="lesson-num">24</span><span><small>Local volatility</small><strong>What local volatility is—and is not</strong></span><em>Philosophy</em></summary>
+    <div class="lesson-body">
+      <div class="layer intuition"><h4>Intuition</h4><p>Local volatility is the unique one-factor diffusion that reproduces all vanilla option prices across strikes and maturities. It need not be interpreted as the true physical law of volatility.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Think of local volatility as an “effective theory” or state-dependent projection of richer stochastic-volatility dynamics.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="breeden litzenberger risk neutral density second strike derivative">
+    <summary><span class="lesson-num">25</span><span><small>Option surface</small><strong>Recovering the risk-neutral density from calls</strong></span><em>Key identity</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[C(K,T)=E^Q[(S_T-K)^+],\qquad \frac{\partial^2 C}{\partial K^2}=\phi(K,T).\]</div>
+      <div class="steps"><h5>Derivative logic</h5><ol><li>(partial_K(S_T-K)^+=-1_{\{S_T>K\}}).</li><li>Thus (partial_K C=-Q(S_T>K)).</li><li>Differentiate again with respect to (K): (partial_{KK}C=\phi(K,T)), the density at (K).</li></ol></div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>Vanilla option prices across strikes encode the full (Q)-distribution of terminal spot.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="dupire equation calendar spread butterfly local variance">
+    <summary><span class="lesson-num">26</span><span><small>Dupire</small><strong>Local variance = calendar spread / butterfly</strong></span><em>Core formula</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><p>With zero rates and dividends,</p><div class="eq">\[\sigma_\ell^2(K,T)=\frac{2\,\partial_T C(K,T)}{K^2\,\partial_{KK}C(K,T)}.\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The numerator measures how option value changes with maturity (calendar spread); the denominator measures strike curvature (butterfly / density).</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>A complete smooth vanilla surface uniquely determines the local-volatility function.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="gyongy local variance conditional expectation instantaneous variance">
+    <summary><span class="lesson-num">27</span><span><small>Projection result</small><strong>Local variance as conditional expected stochastic variance</strong></span><em>Deep intuition</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\sigma_\ell^2(K,t)=E^Q[V_t\mid S_t=K].\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Among all stochastic-volatility paths that arrive at the same spot (K) at time (t), local variance is their conditional average instantaneous variance.</p></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>This formalizes the idea that local volatility is an effective one-dimensional projection of a higher-dimensional stochastic-volatility world.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="local volatility implied total variance w k t formula">
+    <summary><span class="lesson-num">28</span><span><small>Implied-vol coordinates</small><strong>Local variance in terms of total implied variance</strong></span><em>Surface calculus</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><p>Define total implied variance (w(k,T)=\Sigma^2(k,T)T). Then Dupire can be rewritten entirely in terms of (w) and its strike/maturity derivatives.</p><div class="eq">\[v_\ell(k,T)=\frac{\partial_T w}{\left(1-\frac{k}{2w}\partial_k w\right)^2-\frac14\left(\frac14+\frac1w\right)(\partial_k w)^2+\frac12\partial_{kk}w}.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>This is the practical bridge from a parametrized implied-volatility surface to the local-volatility surface used in a PDE or simulation.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="bbf formula berestycki busca florent short time local vol implied vol harmonic average">
+    <summary><span class="lesson-num">29</span><span><small>BBF formula</small><strong>Short-time relation between local vol and implied vol</strong></span><em>Worked interpretation</em></summary>
+    <div class="lesson-body">
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\frac{1}{\Sigma_0(k)}=\frac1k\int_0^k\frac{dz}{\sigma_\ell(z)}.\]</div></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Short-maturity implied volatility is approximately a harmonic-type average of local volatility along the path from ATM (0) to log-strike (k).</p></div>
+      <div class="steps"><h5>How to use it</h5><ol><li>Start with a time-homogeneous local-vol curve (sigma_\ell(k)).</li><li>Integrate reciprocal local vol from (0) to (k).</li><li>Divide by (k).</li><li>Invert to obtain the leading short-maturity implied volatility (Sigma_0(k)).</li></ol></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>The approximation is conceptually useful, but for accurate practical local-vol pricing, numerical PDE methods are generally preferred.</p></div>
+    </div>
+  </details>
+
+  <details class="lesson" data-keywords="lecture 1 lecture 2 conceptual chain">
+    <summary><span class="lesson-num">30</span><span><small>Big picture</small><strong>How Lectures 1 and 2 connect</strong></span><em>One-page memory map</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Returns are heavy-tailed, volatility clusters, spot-vol co-moves negatively, and short-dated skew follows power-law scaling.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Random business time explains why changing variance can create heavy tails. Roughness explains why short-time volatility changes are more jagged than ordinary diffusion intuition suggests.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\text{Data}\Rightarrow V_t\text{ random}\Rightarrow H<1/2\Rightarrow \text{SV/rough-vol restrictions}.\]</div></div>
+      <div class="layer consequence"><h4>Modeling consequence</h4><p>(P) describes forecasting, (Q) describes pricing. Heston gives a tractable stochastic-volatility benchmark; Dupire gives the unique local-volatility projection consistent with the vanilla surface.</p></div>
+    </div>
+  </details>
+</div>
+</section>
+
+<section class="page" id="notes">
+<header class="page-heading"><p class="eyebrow">Professor materials</p><h1>Lecture notes</h1><p class="page-intro">The study guide above is organized for learning. These links point back to the official professor course packages so you can compare the explanation with the source material.</p></header>
+<div class="notes-grid">
+  <article class="notes-card"><p class="meta">Lecture 1</p><h2>Stylized facts</h2><p>Power laws, return distributions, empirical volatility facts, the volatility surface, short-dated smile scaling, skew stickiness, and the volatility envelope.</p><a href="https://github.com/jgatheral/MTH9875/blob/main/9875_1_2026.zip" target="_blank" rel="noopener">Open professor package ↗</a></article>
+  <article class="notes-card"><p class="meta">Lecture 2</p><h2>Stochastic, rough, and local volatility</h2><p>Stochastic-volatility motivation, roughness, physical and pricing measures, Heston, Dupire local volatility, conditional variance, implied-vol coordinates, and BBF.</p><a href="https://github.com/jgatheral/MTH9875/blob/main/9875-2.zip" target="_blank" rel="noopener">Open professor package ↗</a></article>
+</div>
+<section class="content-card"><h2>How source notes and study guide differ</h2><p style="color:var(--muted);line-height:1.65">The professor packages are the authoritative lecture source. The study guide reorganizes the same material by conceptual dependency and adds explicit intermediate algebra wherever a calculation or derivation is easy to lose track of. When you later ask a math question in this course, the corresponding study-guide lesson should be updated with the same step-by-step derivation rather than only adding the final result.</p></section>
+</section>
+
+<section class="page" id="flashcards">
+<header class="page-heading"><p class="eyebrow">Active recall</p><h1>Flashcards</h1><p class="page-intro">Use these for memorization after the conceptual guide. Equations are included only where they help recall the intuition.</p></header>
+<div class="flash-controls"><button class="active" data-deck="all">All</button><button data-deck="l1">Lecture 1</button><button data-deck="l2">Lecture 2</button></div>
+<div class="flashcard-panel"><div class="flashcard"><div class="tag" id="card-tag"></div><h2 id="card-q"></h2><p id="card-a" class="hidden"></p><div class="flash-actions"><button id="reveal">Reveal answer</button><button id="next" class="secondary">Next card</button></div></div></div>
+</section>
+</main>
+
+<script>
+const navBtns=[...document.querySelectorAll('.nav-button')];
+const pages=[...document.querySelectorAll('.page')];
+navBtns.forEach(b=>b.addEventListener('click',()=>{navBtns.forEach(x=>x.classList.toggle('active',x===b));pages.forEach(p=>p.classList.toggle('active',p.id===b.dataset.section));window.scrollTo({top:0,behavior:'smooth'})}));
+const modBtns=[...document.querySelectorAll('.lecture-switch button')];
+const mods=[...document.querySelectorAll('.module')];
+modBtns.forEach(b=>b.addEventListener('click',()=>{modBtns.forEach(x=>x.classList.toggle('active',x===b));mods.forEach(m=>m.classList.toggle('active',m.dataset.modulePanel===b.dataset.module));filterLessons()}));
+const search=document.querySelector('#lesson-search');
+function filterLessons(){const q=(search.value||'').toLowerCase().trim();document.querySelectorAll('.module.active .lesson').forEach(l=>{const hay=(l.innerText+' '+(l.dataset.keywords||'')).toLowerCase();l.classList.toggle('hidden',q && !hay.includes(q))})}
+search.addEventListener('input',filterLessons);
+
+const cards=[
+['l1','What is the difference between a power-law tail exponent and density exponent?','If P(X>x) ~ x^{-ζ}, then f(x) ~ x^{-(ζ+1)}. The density exponent is one larger.'],
+['l1','What does a smaller tail exponent ζ mean?','A fatter tail: extreme outcomes decay more slowly and remain more important.'],
+['l1','If Y=X^α and X has tail exponent ζ, what is the exponent of Y?','ζ_Y = ζ/α.'],
+['l1','What is the cubic law of returns?','Approximately P(|r|>x) ~ x^{-3}; equivalently the density behaves roughly like |r|^{-4}.'],
+['l1','What does volatility clustering mean?','Large absolute moves tend to be followed by large absolute moves, and small by small; it is about magnitude, not sign.'],
+['l1','What is business time?','A random financial clock naturally measured by accumulated or integrated variance ∫V_s ds.'],
+['l1','Why does H<1/2 indicate rough volatility?','Because increments scale as Δ^H with H below Brownian H=1/2, producing more jagged short-scale paths.'],
+['l1','What is ATM skew?','The derivative of implied volatility with respect to log-moneyness k at k=0.'],
+['l1','Why is short-dated ATM skew important?','Its power-law explosion as maturity shrinks strongly constrains admissible volatility dynamics and motivates rough volatility.'],
+['l1','What does the skew-stickiness ratio test?','How ATM implied volatility moves with spot relative to the static strike skew. It is a dynamics test, not only a fit test.'],
+['l2','What is the core stochastic-volatility stock equation under Q with zero rates?','dS_t/S_t = sqrt(V_t) dZ_t.'],
+['l2','Why can a mixture of Gaussian regimes have fat tails?','Low-vol regimes create a sharp center while high-vol regimes create tail mass; the mixture is not Gaussian.'],
+['l2','What is the key distinction between P and Q?','P is the real-world/statistical measure used for forecasting; Q is the pricing measure under which discounted tradable prices are martingales.'],
+['l2','Under log utility, what stock fraction is optimal?','π* = μ/V. If π* is constant, then the equity risk premium μ is proportional to variance V.'],
+['l2','Write the classical Heston variance process.','dV_t = -λ(V_t - V̄)dt + η√V_t dW_t, with d⟨W,Z⟩_t = ρdt.'],
+['l2','What does negative Heston ρ do?','It links spot declines with volatility increases and generates negative equity implied-volatility skew.'],
+['l2','What does the Dupire equation give?','The local variance implied by a complete smooth surface of European call prices: local variance is a calendar-spread term divided by a butterfly/density term.'],
+['l2','What is local variance in a stochastic-vol world?','σ_l^2(K,t) = E^Q[V_t | S_t=K]. It is the conditional average instantaneous variance among paths arriving at spot K.'],
+['l2','What is total implied variance?','w(k,T)=Σ^2(k,T)T. Dupire can be written entirely in terms of w and its derivatives.'],
+['l2','What is the BBF short-time idea?','Short-maturity implied vol is approximately a harmonic-type average of local vol between ATM and the target log-strike.']
+];
+let deck='all', idx=0, revealed=false;
+const tag=document.querySelector('#card-tag'), q=document.querySelector('#card-q'), a=document.querySelector('#card-a');
+function filtered(){return cards.filter(c=>deck==='all'||c[0]===deck)}
+function show(){const arr=filtered();if(!arr.length)return;idx%=arr.length;const c=arr[idx];tag.textContent=c[0]==='l1'?'Lecture 1':'Lecture 2';q.textContent=c[1];a.textContent=c[2];a.classList.add('hidden');revealed=false;document.querySelector('#reveal').textContent='Reveal answer'}
+document.querySelector('#reveal').addEventListener('click',()=>{revealed=!revealed;a.classList.toggle('hidden',!revealed);document.querySelector('#reveal').textContent=revealed?'Hide answer':'Reveal answer'});
+document.querySelector('#next').addEventListener('click',()=>{idx++;show()});
+document.querySelectorAll('[data-deck]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-deck]').forEach(x=>x.classList.toggle('active',x===b));deck=b.dataset.deck;idx=0;show()}));
+show();
+</script>
+</body>
+</html>
