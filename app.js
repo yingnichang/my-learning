@@ -23,3 +23,39 @@ const pages=[...document.querySelectorAll(".page")],navButtons=[...document.quer
 function showPage(id){pages.forEach(p=>p.classList.toggle("active",p.id===id));navButtons.forEach(b=>b.classList.toggle("active",b.dataset.section===id));sidebar.classList.remove("open");window.scrollTo({top:0,behavior:"smooth"});history.replaceState(null,"","#"+id)}
 navButtons.forEach(button=>button.addEventListener("click",()=>showPage(button.dataset.section)));document.querySelector("#menu-toggle").addEventListener("click",()=>sidebar.classList.toggle("open"));
 const initial=location.hash.slice(1);if(pages.some(p=>p.id===initial))showPage(initial);
+
+const moduleButtons=[...document.querySelectorAll(".module-button")];
+const modulePanels=[...document.querySelectorAll("[data-module-panel]")];
+const guideSearch=document.querySelector("#guide-search");
+const lessons=[...document.querySelectorAll(".lesson")];
+
+function showModule(moduleName){
+  moduleButtons.forEach(button=>button.classList.toggle("active",button.dataset.module===moduleName));
+  modulePanels.forEach(panel=>panel.classList.toggle("active",panel.dataset.modulePanel===moduleName));
+  if(guideSearch){guideSearch.value="";filterLessons("")}
+}
+
+function filterLessons(query){
+  const normalized=query.trim().toLowerCase();
+  let visible=0;
+  lessons.forEach(lesson=>{
+    const haystack=(lesson.dataset.keywords+" "+lesson.textContent).toLowerCase();
+    const match=!normalized||haystack.includes(normalized);
+    lesson.hidden=!match;
+    if(match)visible++;
+  });
+  document.querySelectorAll(".guide-empty").forEach(node=>node.remove());
+  if(normalized&&visible===0){
+    const activePanel=document.querySelector("[data-module-panel].active");
+    if(activePanel){const empty=document.createElement("p");empty.className="guide-empty";empty.textContent="No lesson matches this search. Try a broader concept.";activePanel.append(empty)}
+  }
+}
+
+moduleButtons.forEach(button=>button.addEventListener("click",()=>showModule(button.dataset.module)));
+if(guideSearch){guideSearch.addEventListener("input",event=>filterLessons(event.target.value))}
+
+document.querySelectorAll("[data-pdf-src]").forEach(button=>button.addEventListener("click",()=>{
+  const frame=document.querySelector("#"+button.dataset.pdfTarget);
+  if(frame){frame.src=button.dataset.pdfSrc}
+  button.closest(".pdf-jumps").querySelectorAll("button").forEach(item=>item.classList.toggle("active",item===button));
+}));
