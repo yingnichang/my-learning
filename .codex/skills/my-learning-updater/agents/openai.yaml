@@ -1,0 +1,7 @@
+interface:
+  display_name: "My Learning Updater"
+  short_description: "Update and publish the MTH 9897 learning site"
+  brand_color: "#1F548E"
+  default_prompt: "Use $my-learning-updater to add my latest course materials to the learning website."
+policy:
+  allow_implicit_invocation: true
