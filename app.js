@@ -24,6 +24,52 @@ function showPage(id){pages.forEach(p=>p.classList.toggle("active",p.id===id));n
 navButtons.forEach(button=>button.addEventListener("click",()=>showPage(button.dataset.section)));document.querySelector("#menu-toggle").addEventListener("click",()=>sidebar.classList.toggle("open"));
 const initial=location.hash.slice(1);if(pages.some(p=>p.id===initial))showPage(initial);
 
+const escapeGuide=value=>String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char]));
+const guideModuleConfig={
+  "fixed-income":{
+    eyebrow:"Lectures 1–2 · Misha Boroditsky · 40 mini-lectures",
+    title:"Systematic fixed income — complete guide",
+    intro:"The full learning guide follows the professor deck from market structure and bond mathematics through curve construction, relative value, execution, ETFs, and municipals.",
+    path:["Instrument","Curve","Spread","Residual","Portfolio"]
+  },
+  "quant-equity":{
+    eyebrow:"Lecture 3 · Dmitry Rakhlin · 40 mini-lectures",
+    title:"Quantitative equity — complete guide",
+    intro:"The complete guide develops alpha and beta, time-series and cross-sectional research, Fama–MacBeth, factor construction, behavioral explanations, valuation, model testing, and project diagnostics.",
+    path:["Hypothesis","Exposure","Test","Portfolio","Attribution"]
+  }
+};
+
+function renderDetailedGuide(){
+  if(typeof STUDY_GUIDE_SECTIONS==="undefined")return;
+  Object.entries(guideModuleConfig).forEach(([moduleName,config])=>{
+    const panel=document.querySelector(`[data-module-panel="${moduleName}"]`);
+    if(!panel)return;
+    const lessons=STUDY_GUIDE_SECTIONS[moduleName];
+    const path=config.path.map((item,index)=>`${index?"<b>→</b>":""}<span>${escapeGuide(item)}</span>`).join("");
+    const lessonMarkup=lessons.map((lesson,index)=>`
+      <details class="lesson detailed-lesson" ${index===0?"open":""} data-keywords="${escapeGuide([lesson.focus,lesson.keywords,lesson.title].join(" ").toLowerCase())}">
+        <summary><span class="lesson-number">${String(lesson.id).padStart(2,"0")}</span><span><small>${escapeGuide(lesson.focus)}</small><strong>${escapeGuide(lesson.title)}</strong></span><em>${escapeGuide(lesson.pages)}</em></summary>
+        <div class="lesson-body">
+          <div class="lesson-source"><span>Professor deck</span><b>${escapeGuide(lesson.pages)}</b></div>
+          <div class="layer observation"><h4>Observation</h4><p>${escapeGuide(lesson.observation)}</p></div>
+          <div class="layer intuition"><h4>Intuition</h4><p>${escapeGuide(lesson.intuition)}</p></div>
+          <div class="layer mathematics"><h4>Mathematics / structure</h4><div class="equation prose-equation">${escapeGuide(lesson.mathematics)}</div></div>
+          <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>${escapeGuide(lesson.application)}</p></div>
+          <div class="lesson-notes"><p><b>Common confusion</b>${escapeGuide(lesson.confusion)}</p><p><b>Memory rule</b>${escapeGuide(lesson.remember)}</p></div>
+        </div>
+      </details>`).join("");
+    panel.innerHTML=`<div class="module-intro"><div><p class="eyebrow">${escapeGuide(config.eyebrow)}</p><h2>${escapeGuide(config.title)}</h2><p>${escapeGuide(config.intro)}</p></div><div class="module-path">${path}</div></div><div class="module-index"><span>${lessons.length} sections</span><span>6 learning layers each</span><span>Source-page references</span></div>${lessonMarkup}`;
+    const button=document.querySelector(`[data-module="${moduleName}"]`);
+    if(button)button.dataset.count=lessons.length;
+  });
+  const toolbar=document.querySelector(".guide-toolbar");
+  if(toolbar&&!document.querySelector("#lesson-count")){
+    const stats=document.createElement("div");stats.className="guide-stats";stats.id="lesson-count";stats.textContent="80 mini-lectures · search the complete guide";toolbar.append(stats);
+  }
+}
+renderDetailedGuide();
+
 const moduleButtons=[...document.querySelectorAll(".module-button")];
 const modulePanels=[...document.querySelectorAll("[data-module-panel]")];
 const guideSearch=document.querySelector("#guide-search");
@@ -37,16 +83,16 @@ function showModule(moduleName){
 
 function filterLessons(query){
   const normalized=query.trim().toLowerCase();
+  const activePanel=document.querySelector("[data-module-panel].active");
   let visible=0;
   lessons.forEach(lesson=>{
     const haystack=(lesson.dataset.keywords+" "+lesson.textContent).toLowerCase();
     const match=!normalized||haystack.includes(normalized);
     lesson.hidden=!match;
-    if(match)visible++;
+    if(match&&activePanel?.contains(lesson))visible++;
   });
   document.querySelectorAll(".guide-empty").forEach(node=>node.remove());
   if(normalized&&visible===0){
-    const activePanel=document.querySelector("[data-module-panel].active");
     if(activePanel){const empty=document.createElement("p");empty.className="guide-empty";empty.textContent="No lesson matches this search. Try a broader concept.";activePanel.append(empty)}
   }
 }
