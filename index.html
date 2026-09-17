@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Organized study guides, lecture notes, and flashcards for MTH 9897 Systematic Trading.">
+  <title>MTH 9897 Study Hub</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">Σ</div>
+      <div><strong>MTH 9897</strong><span>Systematic Trading</span></div>
+    </div>
+    <p class="nav-label">Course notebook</p>
+    <nav aria-label="Course sections">
+      <button class="nav-button active" data-section="overview"><span>⌂</span>Course overview</button>
+      <button class="nav-button" data-section="guide"><span>▣</span>Study guide</button>
+      <button class="nav-button" data-section="notes"><span>▤</span>Lecture notes</button>
+      <button class="nav-button" data-section="flashcards"><span>◈</span>Flashcards</button>
+    </nav>
+    <div class="sidebar-note"><span>Current module</span><strong>Quantitative Equity</strong><p>Factors, alpha, and empirical testing</p></div>
+    <div class="sidebar-footer">Fall 2026 · Baruch MFE</div>
+  </aside>
+
+  <header class="mobile-header">
+    <button id="menu-toggle" aria-label="Open course navigation">☰</button>
+    <strong>MTH 9897 Study Hub</strong>
+  </header>
+
+  <main class="reading-surface">
+    <section class="page active" id="overview">
+      <header class="page-heading"><p class="eyebrow">MTH 9897 · Fall 2026</p><h1>Systematic Trading</h1><p class="page-intro">A single place for the intuition, formulas, source notes, and review questions that matter most for the course.</p></header>
+      <div class="spotlight-grid">
+        <article class="spotlight navy-card"><p class="card-number">01</p><h2>Fixed income</h2><p>Move from bond cash flows to curves, risk, carry, rolldown, and relative value.</p><code>Price ↔ Yield → Risk → Relative value</code></article>
+        <article class="spotlight blue-card"><p class="card-number">02</p><h2>Quantitative equity</h2><p>Separate factor exposure from alpha, then test whether an anomaly is real and tradable.</p><code>Exposure β × Premium λ + Alpha</code></article>
+      </div>
+      <section class="content-card">
+        <div class="section-title-row"><div><p class="eyebrow">Learning sequence</p><h2>How the course fits together</h2></div><b>Σ</b></div>
+        <div class="timeline">
+          <article><span>Lectures 1–2</span><h3>Systematic fixed income</h3><p>Bond math, market structure, Treasury and credit curves, carry, rolldown, spreads, and trading systems.</p></article>
+          <article><span>Lectures 3–5</span><h3>Fundamental quant models</h3><p>Behavioral finance, Fama–French models, factor portfolios, diagnostics, decay, and implementation cost.</p></article>
+          <article><span>Lectures 6–7</span><h3>Markets and application</h3><p>Capital-markets guest lecture, fixed-income factor models, and final-project review.</p></article>
+        </div>
+      </section>
+      <aside class="margin-note"><b>Study principle</b><p>For every formula, be able to say what changes, what stays fixed, and how a trader would use the result.</p></aside>
+    </section>
+
+    <section class="page" id="guide">
+      <header class="page-heading"><p class="eyebrow">Organized learning path</p><h1>Study guide</h1><p class="page-intro">Learn each topic in dependency order: intuition first, then the formula, then the trading decision.</p></header>
+      <section class="guide-section">
+        <div class="chapter-marker">I</div>
+        <div class="chapter-body"><p class="eyebrow">Lectures 1–2</p><h2>Systematic fixed income</h2>
+          <div class="concept-grid">
+            <article><span>1</span><h3>Bond cash flows</h3><p>A zero-coupon bond has one payment. A coupon bond is a portfolio of dated cash flows. Price is their present value.</p></article>
+            <article><span>2</span><h3>Yield and price</h3><p>Yield is the constant discount rate implied by price. Higher yield means lower price because future cash flows are discounted more heavily.</p></article>
+            <article><span>3</span><h3>Duration and DV01</h3><p>Duration gives percentage sensitivity; DV01 gives dollar sensitivity. Use DV01 to size hedges and compare positions.</p></article>
+            <article><span>4</span><h3>Zero curve</h3><p>Bootstrap zero rates from traded Treasury instruments so each cash flow is discounted at its own maturity-specific rate.</p></article>
+            <article><span>5</span><h3>Carry and rolldown</h3><p>Carry assumes the bond's yield stays fixed. Rolldown holds the curve fixed while the bond ages to a shorter maturity.</p></article>
+            <article><span>6</span><h3>Credit relative value</h3><p>Compare bonds after controlling for rates and cash-flow timing. Z-spread is the constant shift to the zero curve that matches price.</p></article>
+          </div>
+          <div class="formula-panel"><div><span>Price sensitivity</span><strong>ΔP ≈ −D × P × Δy</strong></div><div><span>Dollar sensitivity</span><strong>DV01 = D × P × 0.0001</strong></div><div><span>Settlement value</span><strong>Dirty = Clean + Accrued</strong></div></div>
+        </div>
+      </section>
+      <section class="guide-section">
+        <div class="chapter-marker">II</div>
+        <div class="chapter-body"><p class="eyebrow">Lecture 3</p><h2>Factors, alpha, and empirical tests</h2>
+          <div class="concept-grid">
+            <article><span>1</span><h3>Exposure versus reward</h3><p>Beta is how much an asset loads on a factor. Lambda is the market's expected reward per unit of that exposure. Alpha is the unexplained remainder.</p></article>
+            <article><span>2</span><h3>Time series first</h3><p>For each asset, regress returns through time against factor returns. The estimated coefficients are that asset's known exposures for stage two.</p></article>
+            <article><span>3</span><h3>Cross-section second</h3><p>At a fixed time, compare returns across many assets using their estimated betas. This asks whether greater exposure earned greater return.</p></article>
+            <article><span>4</span><h3>2 × 3 portfolios</h3><p>Sort on size and book-to-market. Compare horizontally or vertically only when the other sorting dimension is being held fixed.</p></article>
+            <article><span>5</span><h3>False discoveries</h3><p>A Type I error calls noise alpha. A Type II error misses real alpha. Data snooping raises false-positive risk across many attempted factors.</p></article>
+            <article><span>6</span><h3>Tradability</h3><p>A statistically real anomaly still needs capacity after transaction costs, short-sale constraints, crowding, and signal decay.</p></article>
+          </div>
+          <div class="two-stage"><div><small>Stage 1 · through time</small><strong>Returns → estimate βᵢ</strong><p>What is each asset exposed to?</p></div><b>→</b><div><small>Stage 2 · across assets</small><strong>βᵢ → estimate λ</strong><p>What does the market pay for that exposure?</p></div></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="page" id="notes">
+      <header class="page-heading"><p class="eyebrow">Source material</p><h1>Lecture notes</h1><p class="page-intro">The original decks are separated from the study guide so you can distinguish the professor's material from the reorganized explanations.</p></header>
+      <article class="source-card"><div class="source-index">L1–2</div><div class="source-copy"><p class="eyebrow">Misha Boroditsky · 88 pages</p><h2>Systematic Fixed Income</h2><p class="source-file">Source: MTH9798.20260908.L2.pdf</p>
+        <details open><summary>Bond primer and risk <span>pp. 12–15</span></summary><p>Zero-coupon and coupon-bond cash flows; yield-price inversion; DV01; duration; callable bonds; OAS; settlement conventions; clean versus dirty price.</p></details>
+        <details><summary>Curves and expected return <span>pp. 18–21</span></summary><p>Treasury yields, bootstrapped zero rates, pull-to-par carry, and rolldown along an unchanged yield curve.</p></details>
+        <details><summary>Credit spreads and relative value <span>pp. 22–27</span></summary><p>Default probability, recovery assumptions, benchmark spreads, G-spread, I-spread, asset-swap spread, and z-spread.</p></details>
+        <details><summary>Trading infrastructure <span>pp. 28–34+</span></summary><p>Security masters, CUSIP/ISIN/FIGI symbology, instrument attributes, market data, FIX messages, systematic signals, risk, quoting, and reporting.</p></details>
+      </div></article>
+      <article class="source-card"><div class="source-index">L3</div><div class="source-copy"><p class="eyebrow">Dmitry Rakhlin · 50 pages</p><h2>Quantitative Investment Framework, Part 1</h2><p class="source-file">Source: MTH9897_2026_Lecture3_QE_Pt1.pdf</p>
+        <details open><summary>Investing landscape and alpha <span>pp. 2–4</span></summary><p>HFT, statistical arbitrage, fundamental factor investing, indexing, hedge-fund categories, and the distinction between factors, risk factors, and pure alpha.</p></details>
+        <details><summary>Time series versus cross-section <span>pp. 5–7</span></summary><p>Independent asset signals, cross-sectional strategies, the two-stage Fama–MacBeth method, and Fama–French size and value portfolios.</p></details>
+        <details><summary>Is an anomaly real? <span>pp. 9–11</span></summary><p>Risk mismeasurement, horse races against known factors, Type I errors, data snooping, economic rationale, costs, short-sale constraints, and limits to arbitrage.</p></details>
+        <details><summary>Behavioral finance <span>pp. 12–18</span></summary><p>Framing, hindsight, confirmation, anchoring, representativeness, availability, overconfidence, emotions, survivorship, and finfluencer evidence.</p></details>
+      </div></article>
+      <aside class="margin-note"><b>Organization rule</b><p>This section tracks the source decks. The Study Guide reorganizes the same material around understanding and exam review.</p></aside>
+    </section>
+
+    <section class="page flashcard-page" id="flashcards">
+      <header class="page-heading"><p class="eyebrow">Active recall</p><h1>Flashcards</h1><p class="page-intro">Say the answer out loud before you reveal it. Recall both the intuition and the formula.</p></header>
+      <div class="flashcard-meta"><span id="card-count">01 / 14</span><div class="progress-track"><span id="progress"></span></div><span>Core deck</span></div>
+      <button class="flashcard" id="flashcard" aria-label="Reveal answer">
+        <span class="card-label" id="card-label"></span>
+        <strong id="card-content"></strong>
+        <span class="card-footer" id="card-footer"></span>
+      </button>
+      <div class="flashcard-controls"><button id="previous">‹ Previous</button><button class="primary-control" id="reveal">Reveal answer</button><button id="next">Next ›</button></div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
