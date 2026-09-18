@@ -1,0 +1,21 @@
+name: inspect-mth9875-packages
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-mth9875-packages.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect lecture packages
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --fail -o l1.zip https://raw.githubusercontent.com/jgatheral/MTH9875/main/9875_1_2026.zip
+          curl -L --fail -o l2.zip https://raw.githubusercontent.com/jgatheral/MTH9875/main/9875-2.zip
+          echo "=== LECTURE 1 ==="
+          unzip -l l1.zip
+          echo "=== LECTURE 2 ==="
+          unzip -l l2.zip
