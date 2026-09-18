@@ -224,6 +224,183 @@ a{color:inherit}
       <div class="layer consequence"><h4>Modeling consequence</h4><p>Matching a static smile is insufficient: the model must also reproduce how that smile moves when spot moves.</p></div>
     </div>
   </details>
+
+  <details class="lesson" data-keywords="zipf rank size pareto power law">
+    <summary><span class="lesson-num">15</span><span><small>Power laws</small><strong>Zipf's law as rank-size scaling</strong></span><em>pp. 1–2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>City sizes, firm sizes, wealth, and word frequencies often line up approximately as straight lines on log-log rank plots.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Rank is another representation of a tail distribution. When the tail exponent is near one, size is approximately inversely proportional to rank.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Pr(S &gt; x) ~ x<sup>−ζ</sup>; if ζ ≈ 1, then ranked size S(r) is approximately proportional to 1/r.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>A rank-size plot is a fast empirical diagnostic for scale-free behavior, but only over the range where the log-log relation is stable.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Zipf is not a separate idea from Pareto here; it is a rank representation of the same heavy-tail structure.</div><div><b>Memory rule</b>Tail exponent near 1 → rank-size slope near −1.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="aggregation min max sum power law">
+    <summary><span class="lesson-num">16</span><span><small>Power-law algebra</small><strong>Sums, maxima, minima, and tail dominance</strong></span><em>p. 2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture lists exponent rules for combinations of independent heavy-tailed variables.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>For sums and maxima, the fattest tail dominates. For a minimum, every variable must be large at the same time, so tail probabilities multiply and exponents add.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">ζ(X₁+⋯+Xₙ) = ζ(max Xᵢ) = minᵢ ζᵢ;  ζ(min Xᵢ) = Σᵢ ζᵢ.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>For a maximum, Pr(max Xᵢ &gt; x) = 1 − ∏ᵢ[1 − Pr(Xᵢ &gt; x)].</li><li>For rare tail events, the leading contribution comes from the slowest-decaying component, so the smallest exponent dominates.</li><li>For a minimum under independence, Pr(min Xᵢ &gt; x) = ∏ᵢ Pr(Xᵢ &gt; x) ~ x<sup>−Σζᵢ</sup>.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>These rules explain why one very heavy-tailed component can dominate an aggregate.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The formulas require the lecture's heavy-tail assumptions; they are not universal identities for arbitrary distributions.</div><div><b>Memory rule</b>Sum/max inherit the fattest tail; min adds exponents.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="student t cubic law moments daily returns">
+    <summary><span class="lesson-num">17</span><span><small>Return tails</small><strong>Student-t, the cubic law, and finite moments</strong></span><em>pp. 7–12</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Daily SPX returns fit a Student-t far better than a Gaussian in the center and tails, with a tail exponent near three over a substantial empirical range.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A Student-t can create both the sharp center and the frequent large moves that a Gaussian misses.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">For Student-t with ν degrees of freedom: density p(x) ~ |x|<sup>−(ν+1)</sup>, while tail probability Pr(|X| &gt; x) ~ x<sup>−ν</sup>. Variance = ν/(ν−2) for ν &gt; 2.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>If ν ≈ 3, the survival-tail exponent is approximately 3.</li><li>The corresponding density exponent is approximately 4.</li><li>This is exactly the one-unit difference between tail and density exponents from Lesson 1.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Gaussian risk models can materially understate the empirical frequency of large daily moves.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The cubic law refers to an approximate empirical tail regime, not an exact law extending to infinity.</div><div><b>Memory rule</b>Student-t ν≈3 ↔ cubic survival tail.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="weekly monthly aggregation central limit fat tails">
+    <summary><span class="lesson-num">18</span><span><small>Aggregation</small><strong>Why weekly and monthly returns look less extreme</strong></span><em>pp. 13–14</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Weekly and monthly returns remain fat-tailed, but aggregation pushes their shapes somewhat closer to Gaussian behavior.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Adding many shocks averages some idiosyncratic detail, while persistent volatility prevents rapid convergence to a simple Gaussian.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">R(t,t+m) = r(t+1) + r(t+2) + ⋯ + r(t+m).</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Model validation should check several horizons. A model that fits daily tails but fails weekly or monthly aggregation misses dependence structure.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Closer to Gaussian does not mean Gaussian; volatility clustering slows the averaging effect.</div><div><b>Memory rule</b>Aggregation softens tails; dependence keeps them alive.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="fokker planck kolmogorov diffusion density">
+    <summary><span class="lesson-num">19</span><span><small>Diffusion densities</small><strong>From an SDE to the Fokker-Planck equation</strong></span><em>pp. 14–15</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture derives how the probability density of a diffusion evolves through time.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Itô describes functions of individual random paths; Fokker-Planck is the corresponding evolution equation for the entire density.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dXₜ = μ(Xₜ,t)dt + σ(Xₜ,t)dWₜ  ⇒  ∂ₜp = −∂ₓ(μp) + ½∂ₓₓ(σ²p).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Apply Itô's formula to a smooth test function f(Xₜ,t).</li><li>Take expectations; the stochastic dW term has zero expectation.</li><li>Write E[f(Xₜ,t)] as an integral of f against the density p.</li><li>Use integration by parts to move derivatives from f onto p.</li><li>Because the identity holds for suitable f, identify the PDE for p.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is the bridge between path dynamics and stationary tail distributions.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The SDE evolves sample paths; Fokker-Planck evolves their density.</div><div><b>Memory rule</b>SDE for paths ↔ Fokker-Planck for density.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="gabaix zeta minimum average size derivation">
+    <summary><span class="lesson-num">20</span><span><small>Power-law mechanism</small><strong>Deriving the Gabaix tail exponent</strong></span><em>pp. 15–16</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>A proportional-growth diffusion can generate a stationary power-law size distribution once a lower cutoff is imposed.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Multiplicative growth is scale free: a one-percent shock has the same proportional meaning for a small or large object.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dXₜ = μXₜdt + νXₜdZₜ;  f(x) ∝ x<sup>−(ζ+1)</sup>;  ζ = 1 − 2μ/ν²;  and ζ = 1/(1 − Smin/S̄).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Set the stationary Fokker-Planck time derivative to zero.</li><li>Insert the candidate density f(x)=C x<sup>−(ζ+1)</sup> and match powers of x.</li><li>The non-degenerate solution gives ζ = 1 − 2μ/ν².</li><li>Normalize the Pareto density above Smin and compute the mean S̄ = Smin · ζ/(ζ−1).</li><li>Multiply through: S̄(ζ−1)=Smin·ζ.</li><li>Rearrange: ζ(S̄−Smin)=S̄.</li><li>Divide by S̄−Smin: ζ = S̄/(S̄−Smin) = 1/(1−Smin/S̄).</li><li>When Smin is much smaller than S̄, Smin/S̄ is close to zero, so ζ ≈ 1.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>When the mean scale is much larger than the minimum scale, a Zipf-like exponent near one emerges.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The approximation ζ≈1 comes from scale separation; it does not require setting Smin exactly to zero.</div><div><b>Memory rule</b>Large mean relative to minimum → ζ near 1.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="oxford man realized variance business time normalized returns">
+    <summary><span class="lesson-num">21</span><span><small>Business time</small><strong>Oxford-Man realized variance and normalized returns</strong></span><em>pp. 16–18</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>High-frequency data provide daily estimates of integrated variance that can be used to normalize returns.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Calendar time treats a quiet day and a crisis day as equal lengths; variance time stretches the crisis day and compresses the quiet day.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Financial clock τ(t) = ∫₀ᵗ Vₛ ds. Returns divided by the square root of integrated variance are empirically much closer to Gaussian.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This motivates stochastic volatility as a random time change rather than a static exotic return distribution.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Variance-normalized returns are closer to Gaussian, not perfectly Gaussian.</div><div><b>Memory rule</b>Variance is the market's clock.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="high frequency trading time activity clock">
+    <summary><span class="lesson-num">22</span><span><small>High frequency</small><strong>Trading time versus clock time</strong></span><em>pp. 18–21</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>At intraday horizons, returns indexed by numbers of trades can behave differently from returns indexed by elapsed clock time.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Trading activity is itself random, so a fixed minute can contain very different amounts of information and risk.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Calendar-time return = price change over a random amount of trading activity.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Execution and microstructure models often benefit from activity clocks, volume time, or variance time.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Trading time does not magically make returns exactly normal; it isolates one source of heteroskedasticity.</div><div><b>Memory rule</b>Random activity makes calendar time heteroskedastic.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="order size gabaix impact microstructure tail">
+    <summary><span class="lesson-num">23</span><span><small>Market microstructure</small><strong>Order-size tails and market impact</strong></span><em>pp. 21–22</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Market order sizes are themselves heavy-tailed; the lecture connects this fact to proposed explanations for return tails.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>If trade sizes have fat tails and price impact is nonlinear, scale-free order-flow variation can transmit into returns.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">If Pr(Q&gt;x) ~ x<sup>−ζQ</sup> and price impact Δp ~ Q<sup>δ</sup>, then the transformation rule suggests ζ(Δp) ≈ ζQ/δ.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This gives a structural route from trading activity to return tails when evaluating microstructure explanations.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The relation is a mechanism hypothesis, not proof that order size alone explains volatility.</div><div><b>Memory rule</b>Heavy-tailed flow + impact can create heavy-tailed returns.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="stylized facts autocorrelation squared absolute returns">
+    <summary><span class="lesson-num">24</span><span><small>Stylized facts</small><strong>Zero return autocorrelation versus persistent volatility</strong></span><em>pp. 22–27</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Raw returns show little linear autocorrelation at daily horizons, while absolute and squared returns show strong positive autocorrelation.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The sign of tomorrow's move is hard to predict, but the magnitude of tomorrow's move is much more predictable.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Corr(rₜ,rₜ₊ₖ) ≈ 0, while Corr(|rₜ|,|rₜ₊ₖ|) &gt; 0 and Corr(rₜ²,rₜ₊ₖ²) &gt; 0.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Volatility forecasting can be useful even when directional return forecasting is weak.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Volatility clustering concerns magnitude, not repeated positive or negative signs.</div><div><b>Memory rule</b>Direction forgets; magnitude remembers.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="leverage effect spot vol correlation">
+    <summary><span class="lesson-num">25</span><span><small>Leverage</small><strong>Negative returns and future volatility</strong></span><em>pp. 27–31</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Negative equity returns tend to be followed by higher volatility more strongly than positive returns of similar magnitude.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A price drop raises financial leverage and often coincides with risk-off demand, both pushing volatility upward.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Corr(rₜ, Vₜ₊Δ) &lt; 0 for equities over relevant horizons.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Stochastic-volatility models typically use negative spot-vol correlation to reproduce equity skew dynamics.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The leverage effect is a time-series relation; implied-volatility skew is a cross-strike option-price object.</div><div><b>Memory rule</b>Down moves tend to lift volatility.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="vix path dependence non markov state">
+    <summary><span class="lesson-num">26</span><span><small>Path dependence</small><strong>Why VIX is not a function of spot alone</strong></span><em>pp. 30–32</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The same SPX level can coexist with very different VIX levels depending on the path and market state that led there.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Volatility contains state information that current spot alone does not summarize.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">In general, VIXₜ ≠ f(Sₜ) for any one-dimensional state function f.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This observation motivates extra volatility state variables and eventually non-Markovian models.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A spot-versus-VIX scatter plot can hide time ordering; coloring observations by date reveals path dependence.</div><div><b>Memory rule</b>Same spot does not imply same volatility state.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="volatility surface log strike maturity smile skew">
+    <summary><span class="lesson-num">27</span><span><small>Surface geometry</small><strong>Strike, log-strike, maturity, smile, and skew</strong></span><em>pp. 32–36</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Implied volatility varies across both strike and maturity, forming a two-dimensional surface rather than one constant volatility number.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Log-strike expresses relative moneyness, while maturity controls the horizon over which uncertainty accumulates.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">k = log(K/F(T)); implied volatility is a function Σ(k,T).</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>These coordinates are the natural language for calibration, interpolation, and smile dynamics.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A smile is one maturity slice; the volatility surface is the collection of all slices.</div><div><b>Memory rule</b>Smile = one T; surface = all T.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="surface many expirations short dated">
+    <summary><span class="lesson-num">28</span><span><small>Market evolution</small><strong>Why today's surface has many more expirations</strong></span><em>pp. 32–34</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture contrasts older SPX option surfaces with modern markets containing many more listed expirations, including very short-dated options.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>More maturity points reveal much more of the time-scale structure of skew and make short-time asymptotics economically important.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">More listed maturities T ⇒ finer observation of the term structure Σ(k,T).</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Modern short-dated markets place stronger demands on models of smile term structure.</p></div>
+      <div class="remember"><div><b>Common confusion</b>More expirations do not mean every quote is independent information; neighboring maturities are strongly related.</div><div><b>Memory rule</b>Dense maturities expose short-time dynamics.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="skew stickiness ratio sticky strike delta dynamics">
+    <summary><span class="lesson-num">29</span><span><small>Smile dynamics</small><strong>Interpreting the skew-stickiness ratio</strong></span><em>pp. 44–53</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The skew-stickiness ratio compares how ATM implied volatility actually moves with spot against the move implied by sliding along a static strike smile.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>It asks whether the surface behaves more like sticky strike, sticky delta, or an intermediate regime.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">SSR ≈ observed ATM-vol response to spot / static strike-skew response.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>SSR is a dynamics diagnostic: two models can fit today's smile equally well yet imply different hedging P&amp;L tomorrow.</p></div>
+      <div class="remember"><div><b>Common confusion</b>SSR is not the ATM skew itself; it measures movement of the surface when spot moves.</div><div><b>Memory rule</b>Skew is shape; SSR is dynamics.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="volatility envelope non markov engineering model conclusion">
+    <summary><span class="lesson-num">30</span><span><small>Big picture</small><strong>Volatility envelope and why conventional models are approximations</strong></span><em>pp. 53–59</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture ends by emphasizing that real volatility displays multiple time scales and path dependence that low-dimensional Markov models cannot fully encode.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Classical models are useful engineering approximations: they compress a complicated history-dependent market into a small state vector.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Real volatility: many scales + history dependence → low-dimensional Markov model: approximation.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Model choice should be judged by the task—pricing, hedging, forecasting—not by whether it is literally the physical truth.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Calling a model wrong is not enough; the useful question is which empirical features it preserves or misses.</div><div><b>Memory rule</b>Models are maps, not the territory.</div></div>
+    </div>
+  </details>
 </div>
 
 <div class="module" data-module-panel="l2">
