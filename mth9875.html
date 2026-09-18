@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="MTH 9875 The Volatility Surface study hub: Lecture 1 stylized facts and Lecture 2 stochastic, rough, and local volatility.">
+<meta name="description" content="MTH 9875 The Volatility Surface study hub: Lectures 1–3 covering stylized facts, stochastic and rough volatility, local volatility, forward variance, affine models, and characteristic functions.">
 <title>MTH 9875 · The Volatility Surface</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script>
@@ -35,7 +35,7 @@ a{color:inherit}
 .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;margin-top:28px}.hero-card,.content-card,.notes-card,.flashcard-panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
 .hero-card{padding:26px}.hero-card.teal{background:linear-gradient(150deg,#0f6b66,#174e54);color:#fff;border-color:transparent}.hero-card h2{font-family:Georgia,"Times New Roman",serif;font-size:30px;margin:10px 0}.hero-card p{line-height:1.65}.hero-card .chain{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,255,255,.1);padding:13px;border-radius:12px;line-height:1.65}
 .hero-card.light ul{padding-left:18px;line-height:1.8;color:var(--muted)}
-.content-card{padding:24px;margin-top:22px}.content-card h2{font-family:Georgia,"Times New Roman",serif;font-size:28px;margin:0 0 10px}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.timeline article{background:#f8fbfb;border:1px solid var(--line);padding:15px;border-radius:14px}.timeline span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:800}.timeline h3{font-size:16px;margin:7px 0}.timeline p{font-size:13px;color:var(--muted);line-height:1.5}
+.content-card{padding:24px;margin-top:22px}.content-card h2{font-family:Georgia,"Times New Roman",serif;font-size:28px;margin:0 0 10px}.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:18px}.timeline article{background:#f8fbfb;border:1px solid var(--line);padding:15px;border-radius:14px}.timeline span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:800}.timeline h3{font-size:16px;margin:7px 0}.timeline p{font-size:13px;color:var(--muted);line-height:1.5}
 .guide-toolbar{display:flex;justify-content:space-between;gap:16px;align-items:end;position:sticky;top:0;background:linear-gradient(var(--paper) 78%,rgba(244,248,248,0));padding:10px 0 18px;z-index:8}.lecture-switch{display:flex;gap:6px;padding:5px;background:#e4eeee;border-radius:12px}.lecture-switch button{border:0;background:transparent;padding:10px 14px;border-radius:9px;font-weight:800;color:#54706f;cursor:pointer}.lecture-switch button.active{background:#fff;color:var(--teal2);box-shadow:0 3px 12px rgba(16,40,58,.08)}.search label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px}.search input{width:310px;max-width:40vw;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
 .module{display:none}.module.active{display:block}.module-intro{background:linear-gradient(135deg,#edf7f5,#f8fbfb);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px}.module-intro h2{font-family:Georgia,"Times New Roman",serif;font-size:31px;margin:0 0 8px}.module-intro p{color:var(--muted);line-height:1.6}.module-path{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.module-path span{padding:7px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:750}
 .lesson{background:#fff;border:1px solid var(--line);border-radius:16px;margin:12px 0;overflow:hidden}.lesson[open]{box-shadow:var(--shadow)}.lesson summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;padding:17px 18px}.lesson summary::-webkit-details-marker{display:none}.lesson-num{width:38px;height:38px;border-radius:11px;background:var(--soft);color:var(--teal2);display:grid;place-items:center;font-weight:900}.lesson summary small{display:block;text-transform:uppercase;letter-spacing:.09em;color:var(--teal);font-size:10px;font-weight:850;margin-bottom:4px}.lesson summary strong{font-size:17px}.lesson summary em{font-style:normal;font-size:11px;color:#7b8b92;border:1px solid var(--line);padding:6px 8px;border-radius:999px}
@@ -61,31 +61,31 @@ a{color:inherit}
     <button class="nav-button" data-section="notes">▤ Lecture notes</button>
     <button class="nav-button" data-section="flashcards">◈ Flashcards</button>
   </nav>
-  <div class="sidebar-note"><span>Current coverage</span><strong>Lectures 1–2</strong><p>Stylized facts → stochastic volatility → rough volatility → local volatility.</p></div>
+  <div class="sidebar-note"><span>Current coverage</span><strong>Lectures 1–3</strong><p>Stylized facts → stochastic/rough volatility → local volatility → forward variance → affine models.</p></div>
   <div class="sidebar-footer">Jim Gatheral · Fall 2026 · Baruch MFE</div>
 </aside>
 <header class="mobile-header"><a href="index.html" style="color:white;text-decoration:none">← Courses</a><strong>MTH 9875</strong></header>
 
 <main class="main">
 <section class="page active" id="overview">
-  <header class="page-heading"><p class="eyebrow">MTH 9875 · Fall 2026</p><h1>The Volatility Surface</h1><p class="page-intro">The first two lectures build one continuous argument: empirical market data reject constant-volatility thinking; stochastic volatility explains changing variance and smiles; rough volatility explains the observed short-time scaling; local volatility shows how a vanilla option surface can be represented by a state-dependent diffusion.</p></header>
+  <header class="page-heading"><p class="eyebrow">MTH 9875 · Fall 2026</p><h1>The Volatility Surface</h1><p class="page-intro">The first three lectures build one continuous argument: empirical market data reject constant-volatility thinking; stochastic and rough volatility explain changing variance and short-time scaling; local volatility matches the vanilla surface; affine forward-variance models then unify classical and rough Heston and make characteristic-function pricing tractable.</p></header>
   <div class="hero-grid">
-    <article class="hero-card teal"><p class="eyebrow" style="color:#b8e8e3">Course backbone</p><h2>Data → model restriction → option surface</h2><div class="chain">Stylized facts → random variance → stochastic volatility → roughness → P vs Q → Heston → Dupire local volatility → implied-volatility geometry</div><p>The guiding rule is not to memorize isolated equations. For each one, ask what empirical fact motivates it, what assumption is being made, and what observable quantity it helps explain.</p></article>
+    <article class="hero-card teal"><p class="eyebrow" style="color:#b8e8e3">Course backbone</p><h2>Data → model restriction → option surface</h2><div class="chain">Stylized facts → random variance → stochastic volatility → roughness → P vs Q → Heston → Dupire local volatility → forward variance → affine models → characteristic functions</div><p>The guiding rule is not to memorize isolated equations. For each one, ask what empirical fact motivates it, what assumption is being made, and what observable quantity it helps explain.</p></article>
     <article class="hero-card light"><p class="eyebrow">How to use this site</p><h2>Four learning layers</h2><ul><li><b>Observation:</b> what the data or option market shows.</li><li><b>Intuition:</b> why the phenomenon occurs.</li><li><b>Mathematics:</b> the formula and derivation.</li><li><b>Modeling consequence:</b> what a valid volatility model must reproduce.</li></ul></article>
   </div>
-  <section class="content-card"><h2>Lecture 1–2 map</h2><div class="timeline">
+  <section class="content-card"><h2>Lecture 1–3 map</h2><div class="timeline">
     <article><span>Lecture 1A</span><h3>Empirical facts</h3><p>Power laws, fat tails, volatility clustering, leverage, business time.</p></article>
     <article><span>Lecture 1B</span><h3>Surface facts</h3><p>Smile/skew, short-dated explosion, skew stickiness, volatility envelope.</p></article>
     <article><span>Lecture 2A</span><h3>Dynamic models</h3><p>Random variance, roughness, P/Q measures, Heston and volatility risk.</p></article>
-    <article><span>Lecture 2B</span><h3>Local volatility</h3><p>Dupire equation, conditional variance interpretation, implied-vol formula, BBF.</p></article>
+    <article><span>Lecture 2B</span><h3>Local volatility</h3><p>Dupire equation, conditional variance interpretation, implied-vol formula, BBF.</p></article><article><span>Lecture 3</span><h3>Affine models</h3><p>Forward variance, kernels, non-Markovianity, fractional Riccati equations, characteristic functions, and variance-memory diagnostics.</p></article>
   </div></section>
 </section>
 
 <section class="page" id="guide">
-<header class="page-heading"><p class="eyebrow">Detailed layered reference</p><h1>Study guide</h1><p class="page-intro">Each mini-lesson is written as Observation → Intuition → Mathematics → Modeling consequence. Worked calculations appear directly inside the relevant lesson.</p></header>
+<header class="page-heading"><p class="eyebrow">Detailed layered reference</p><h1>Study guide</h1><p class="page-intro">Each mini-lesson is written as Observation → Intuition → Mathematics → Modeling consequence. When you ask how an equation is derived or calculated, the matching lesson is updated with the starting equation, every non-trivial intermediate step, substitutions, assumptions, and the final interpretation.</p></header>
 <div class="guide-toolbar">
-  <div class="lecture-switch"><button class="active" data-module="l1">Lecture 1</button><button data-module="l2">Lecture 2</button></div>
-  <div class="search"><label for="lesson-search">Filter lessons</label><input id="lesson-search" type="search" placeholder="Try: power law, Hurst, Dupire, Heston…"></div>
+  <div class="lecture-switch"><button class="active" data-module="l1">Lecture 1</button><button data-module="l2">Lecture 2</button><button data-module="l3">Lecture 3</button></div>
+  <div class="search"><label for="lesson-search">Filter lessons</label><input id="lesson-search" type="search" placeholder="Try: power law, Hurst, Dupire, kernel, affine, Riccati…"></div>
 </div>
 
 <div class="module active" data-module-panel="l1">
@@ -1046,17 +1046,17 @@ a{color:inherit}
 </section>
 
 <section class="page" id="notes">
-<header class="page-heading"><p class="eyebrow">Professor materials</p><h1>Lecture notes</h1><p class="page-intro">The study guide above is organized for learning. These links point back to the official professor course packages so you can compare the explanation with the source material.</p></header>
+<header class="page-heading"><p class="eyebrow">Professor materials</p><h1>Lecture notes</h1><p class="page-intro">The study guide above is organized for learning. These links point back to the official professor course packages so you can compare the explanation with the source material. Lecture 3 was built from the 46-page Affine Models PDF supplied for this course.</p></header>
 <div class="notes-grid">
   <article class="notes-card"><p class="meta">Lecture 1</p><h2>Stylized facts</h2><p>Power laws, return distributions, empirical volatility facts, the volatility surface, short-dated smile scaling, skew stickiness, and the volatility envelope.</p><a href="https://github.com/jgatheral/MTH9875/blob/main/9875_1_2026.zip" target="_blank" rel="noopener">Open professor package ↗</a></article>
   <article class="notes-card"><p class="meta">Lecture 2</p><h2>Stochastic, rough, and local volatility</h2><p>Stochastic-volatility motivation, roughness, physical and pricing measures, Heston, Dupire local volatility, conditional variance, implied-vol coordinates, and BBF.</p><a href="https://github.com/jgatheral/MTH9875/blob/main/9875-2.zip" target="_blank" rel="noopener">Open professor package ↗</a></article>
-</div>
+<article class="notes-card"><p class="meta">Lecture 3 · 46 pages</p><h2>Affine models</h2><p>Forward variance, classical and rough Heston, non-Markovianity, kernels, fractional calculus, Riccati equations, characteristic functions, and empirical ACF/smile experiments.</p><a href="https://github.com/jgatheral/MTH9875/blob/main/9875-3.zip" target="_blank" rel="noopener">Open professor package ↗</a></article></div>
 <section class="content-card"><h2>How source notes and study guide differ</h2><p style="color:var(--muted);line-height:1.65">The professor packages are the authoritative lecture source. The study guide reorganizes the same material by conceptual dependency and adds explicit intermediate algebra wherever a calculation or derivation is easy to lose track of. When you later ask a math question in this course, the corresponding study-guide lesson should be updated with the same step-by-step derivation rather than only adding the final result.</p></section>
 </section>
 
 <section class="page" id="flashcards">
 <header class="page-heading"><p class="eyebrow">Active recall</p><h1>Flashcards</h1><p class="page-intro">Use these for memorization after the conceptual guide. Equations are included only where they help recall the intuition.</p></header>
-<div class="flash-controls"><button class="active" data-deck="all">All</button><button data-deck="l1">Lecture 1</button><button data-deck="l2">Lecture 2</button></div>
+<div class="flash-controls"><button class="active" data-deck="all">All</button><button data-deck="l1">Lecture 1</button><button data-deck="l2">Lecture 2</button><button data-deck="l3">Lecture 3</button></div>
 <div class="flashcard-panel"><div class="flashcard"><div class="tag" id="card-tag"></div><h2 id="card-q"></h2><p id="card-a" class="hidden"></p><div class="flash-actions"><button id="reveal">Reveal answer</button><button id="next" class="secondary">Next card</button></div></div></div>
 </section>
 </main>
@@ -1064,7 +1064,7 @@ a{color:inherit}
 <script>
 const navBtns=[...document.querySelectorAll('.nav-button')];
 const pages=[...document.querySelectorAll('.page')];
-navBtns.forEach(b=>b.addEventListener('click',()=>{navBtns.forEach(x=>x.classList.toggle('active',x===b));pages.forEach(p=>p.classList.toggle('active',p.id===b.dataset.section));window.scrollTo({top:0,behavior:'smooth'})}));
+function activatePage(id,scroll=true){navBtns.forEach(x=>x.classList.toggle('active',x.dataset.section===id));pages.forEach(p=>p.classList.toggle('active',p.id===id));if(scroll)window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'','#'+id)} navBtns.forEach(b=>b.addEventListener('click',()=>activatePage(b.dataset.section,true))); const initialSection=location.hash.slice(1); if(pages.some(p=>p.id===initialSection))activatePage(initialSection,false);
 const modBtns=[...document.querySelectorAll('.lecture-switch button')];
 const mods=[...document.querySelectorAll('.module')];
 modBtns.forEach(b=>b.addEventListener('click',()=>{modBtns.forEach(x=>x.classList.toggle('active',x===b));mods.forEach(m=>m.classList.toggle('active',m.dataset.modulePanel===b.dataset.module));filterLessons()}));
@@ -1093,11 +1093,17 @@ const cards=[
 ['l2','What is local variance in a stochastic-vol world?','σ_l^2(K,t) = E^Q[V_t | S_t=K]. It is the conditional average instantaneous variance among paths arriving at spot K.'],
 ['l2','What is total implied variance?','w(k,T)=Σ^2(k,T)T. Dupire can be written entirely in terms of w and its derivatives.'],
 ['l2','What is the BBF short-time idea?','Short-maturity implied vol is approximately a harmonic-type average of local vol between ATM and the target log-strike.']
-];
+,
+['l2','What is the equity risk premium?','The expected stock return above the risk-free rate. In the Lecture 2 log-utility setup, μ_t = βV_t, so the equity risk premium is proportional to instantaneous variance.'],
+['l2','What does delta hedging remove?','Delta hedging removes first-order spot exposure: choose stock so total Δ = 0. It neutralizes the local linear spot term, not gamma, vega, jumps, or time decay.'],
+['l2','What does gamma hedging remove, and how do I combine it with delta hedging?','Gamma hedging removes second-order spot curvature using another option. First choose option quantity n_H = −Γ_P/Γ_H to neutralize gamma; then use stock to re-neutralize delta.'],
+['l3','What does conditional average / conditional expectation mean?','E_t[X] = E[X | F_t]: average over all possible futures while holding today’s information fixed. For forward variance, ξ_t(u)=E_t[V_u].'],
+['l3','How do I solve the Heston forward-variance ODE?','Start with ∂_u ξ_t(u)=−λ(ξ_t(u)−V̄). Set y=ξ−V̄, solve y′=−λy, and use ξ_t(t)=V_t. Result: ξ_t(u)=V̄+(V_t−V̄)e^(−λ(u−t)).'],
+['l3','What does “ξ_t(u) is a martingale in t” mean?','For fixed future u, E_s[ξ_t(u)] = ξ_s(u) for s<t<u. As information time t moves, ξ can move randomly but has no predictable drift. Do not confuse this with mean reversion in the maturity variable u.']];
 let deck='all', idx=0, revealed=false;
 const tag=document.querySelector('#card-tag'), q=document.querySelector('#card-q'), a=document.querySelector('#card-a');
 function filtered(){return cards.filter(c=>deck==='all'||c[0]===deck)}
-function show(){const arr=filtered();if(!arr.length)return;idx%=arr.length;const c=arr[idx];tag.textContent=c[0]==='l1'?'Lecture 1':'Lecture 2';q.textContent=c[1];a.textContent=c[2];a.classList.add('hidden');revealed=false;document.querySelector('#reveal').textContent='Reveal answer'}
+function show(){const arr=filtered();if(!arr.length)return;idx%=arr.length;const c=arr[idx];tag.textContent=c[0]==='l1'?'Lecture 1':(c[0]==='l2'?'Lecture 2':'Lecture 3');q.textContent=c[1];a.textContent=c[2];a.classList.add('hidden');revealed=false;document.querySelector('#reveal').textContent='Reveal answer'}
 document.querySelector('#reveal').addEventListener('click',()=>{revealed=!revealed;a.classList.toggle('hidden',!revealed);document.querySelector('#reveal').textContent=revealed?'Hide answer':'Reveal answer'});
 document.querySelector('#next').addEventListener('click',()=>{idx++;show()});
 document.querySelectorAll('[data-deck]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-deck]').forEach(x=>x.classList.toggle('active',x===b));deck=b.dataset.deck;idx=0;show()}));
