@@ -47,3 +47,17 @@ After publishing:
 
 - Wait for the final Pages workflow for the latest commit to finish successfully. Rapid intermediate commits may be cancelled by GitHub; validate the final consolidated run.
 - On the live site, test the relevant navigation tab, lecture selector, search, at least one expanded mini-lecture, one PDF open/view path, and flashcard reveal/next behavior.
+
+
+## MTH 9875 - The Volatility Surface
+
+Course page: `mth9875.html`.
+
+Current source organization:
+1. Lecture 1 - Stylized facts.
+2. Lecture 2 - Stochastic, rough, and local volatility.
+3. Lecture 3 - Affine models.
+
+The MTH 9875 guide is cumulative. Lecture 3 extends, rather than replaces, the Lecture 1-2 chain: empirical volatility facts -> stochastic/rough volatility -> forward variance -> affine models -> characteristic functions and numerical diagnostics.
+
+For MTH 9875 specifically, user-asked derivations and calculation questions must be promoted into the relevant study-guide mini-lesson with explicit intermediate mathematics. Saved flashcards remain opt-in only.
