@@ -547,6 +547,161 @@ a{color:inherit}
       <div class="layer consequence"><h4>Modeling consequence</h4><p>(P) describes forecasting, (Q) describes pricing. Heston gives a tractable stochastic-volatility benchmark; Dupire gives the unique local-volatility projection consistent with the vanilla surface.</p></div>
     </div>
   </details>
+
+  <details class="lesson" data-keywords="realized variance integrated variance sample variance">
+    <summary><span class="lesson-num">17</span><span><small>Variance measurement</small><strong>Realized variance versus integrated variance</strong></span><em>pp. 5–8</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Realized variance is a data-based estimate formed from high-frequency returns; integrated variance is the latent quadratic-variation quantity in the continuous-time model.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>As sampling becomes fine and microstructure noise is controlled, realized variance is designed to estimate the variance accumulated along one price path.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">RV(t,T) = Σᵢ rᵢ²  →  ∫ₜᵀ Vₛ ds.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Integrated variance is a model quantity: add instantaneous variance Vₛ over time.</li><li>Realized variance is an estimator: split the day into short intervals, calculate each log return rᵢ, square it, and sum.</li><li>Under appropriate conditions, the realized sum converges to quadratic variation, which equals integrated variance in the diffusion model.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Do not treat one day's realized-variance estimate as the instantaneous value Vₜ; it summarizes variance over an interval.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Sample variance across observations and realized variance along a time path are different concepts.</div><div><b>Memory rule</b>Realized variance estimates integrated variance.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="moment scaling zeta q delta rough volatility">
+    <summary><span class="lesson-num">18</span><span><small>Roughness estimation</small><strong>Moment scaling m(q,Δ)</strong></span><em>pp. 9–13</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture measures how increments of log volatility change as the sampling interval Δ changes.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>If a process has local roughness exponent H, typical increments shrink like Δᴴ. Taking an absolute q-th moment multiplies the exponent by q.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">m(q,Δ) = E[|log σ(t+Δ) − log σ(t)|^q] ∝ Δ^(ζq), with ζq = qH under monofractal scaling.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Choose a moment order q, such as 0.5, 1, 1.5, or 2.</li><li>For many lags Δ, compute the empirical q-th absolute moment of log-volatility increments.</li><li>Take logs: log m(q,Δ) = constant + ζq · log Δ.</li><li>Regress log m on log Δ. The regression slope estimates ζq for that q.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The collection of ζq values summarizes scaling across multiple moments rather than relying on one visual roughness measure.</p></div>
+      <div class="remember"><div><b>Common confusion</b>ζq is not the Hurst exponent itself unless q=1; under monofractality ζq=qH.</div><div><b>Memory rule</b>Log-log slope in Δ gives ζq.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="regress zeta q H through origin">
+    <summary><span class="lesson-num">19</span><span><small>Roughness estimation</small><strong>Regressing ζq on q to estimate H</strong></span><em>pp. 12–13</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>After estimating one ζq for each moment order, the lecture uses their linear relation to infer a single H.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Under monofractality, ζ0=0, so the theoretical line goes through the origin.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">ζq = qH; through-origin least squares gives Ĥ = Σ(q·ζ̂q) / Σ(q²).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Collect the points (q, ζ̂q) from the first-stage log-log regressions.</li><li>Impose the theoretical relation ζq=qH.</li><li>Minimize Σ(ζ̂q−Hq)² with respect to H.</li><li>Differentiate: −2Σ q(ζ̂q−Hq)=0.</li><li>Rearrange: Σ qζ̂q = H Σ q².</li><li>Therefore Ĥ = Σ(qζ̂q)/Σ(q²).</li><li>The lecture's empirical estimate is around H≈0.17, far below the Brownian benchmark 1/2.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This converts the observed multiscale behavior into one interpretable roughness parameter.</p></div>
+      <div class="remember"><div><b>Common confusion</b>q indexes moments; it is not a time variable.</div><div><b>Memory rule</b>Slope of ζq versus q = H.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="hurst exponent rough H less half">
+    <summary><span class="lesson-num">20</span><span><small>Rough volatility</small><strong>Why H below one-half means rough</strong></span><em>pp. 12–15</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Estimated volatility paths fluctuate more irregularly at short scales than Brownian-like H=1/2 intuition would suggest.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>For a small time step Δ between zero and one, a smaller exponent makes Δᴴ larger, so increments die away more slowly as the sampling interval shrinks.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">|ΔX| scales like Δᴴ. For Δ=0.01: Δ^0.17 ≈ 0.457, while Δ^0.5 = 0.1.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Take a small Δ such as 0.01.</li><li>Compute 0.01^0.5 = 0.1.</li><li>Compute 0.01^0.17 ≈ 0.457.</li><li>The rough-H increment scale is much larger at the same tiny time step.</li><li>That larger short-scale movement corresponds to a more jagged path.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Roughness strongly affects short-expiry option smiles because very short-time volatility changes are larger than classical diffusion scaling predicts.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Rough does not mean high long-run variance; it means low path regularity at small time scales.</div><div><b>Memory rule</b>Smaller H → rougher short-scale path.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="H bias realized variance noise smoothing">
+    <summary><span class="lesson-num">21</span><span><small>Estimation bias</small><strong>Why the empirical H estimate is not exact</strong></span><em>p. 13</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture notes two opposing biases when latent instantaneous variance is proxied by daily realized variance.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Daily averaging smooths a rough process and pushes H upward, while measurement noise adds artificial high-frequency jaggedness and pushes H downward.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Observed Ĥ = true H + smoothing effect + measurement-noise effect.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Reliable roughness estimation has to model both latent volatility dynamics and the way volatility is measured.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A clean regression line does not eliminate errors-in-variables problems.</div><div><b>Memory rule</b>Daily averaging smooths; noise roughens.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="fractional brownian covariance H rough">
+    <summary><span class="lesson-num">22</span><span><small>Fractional dynamics</small><strong>Fractional Brownian motion intuition</strong></span><em>pp. 14–17</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Fractional Brownian motion is a canonical self-similar process whose local regularity is indexed by H.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>H=1/2 gives ordinary Brownian scaling; H below 1/2 produces rougher, anti-persistent increment geometry.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Cov(Bᴴₜ,Bᴴₛ) = ½[t^(2H) + s^(2H) − |t−s|^(2H)].</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Fractional Brownian motion is an intuition and mathematical building block for rough-volatility models.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Rough volatility does not mean replacing the stock-price Brownian motion directly with fractional Brownian motion; roughness is usually introduced in volatility or variance.</div><div><b>Memory rule</b>H controls self-similarity and memory geometry.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="forward variance conditional expectation bergomi">
+    <summary><span class="lesson-num">23</span><span><small>Forward variance</small><strong>Why model ξₜ(u)=EₜQ[Vᵤ]</strong></span><em>p. 23</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Instantaneous variance Vₜ is latent, whereas the forward variance curve summarizes pricing-measure expectations of future variance.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>At information time t, every future maturity u has its own expected variance; together those expectations form a curve.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">ξₜ(u) = EₜQ[Vᵤ], u&gt;t; and under continuity Vₜ = lim(u↓t) ξₜ(u).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Fix today's information time t.</li><li>Pick a future time u.</li><li>Average the future random variance Vᵤ under Q conditional on today's information.</li><li>Repeat for every u&gt;t to obtain the entire forward-variance curve.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Forward variance becomes the state variable for Bergomi-type and affine forward-variance models, setting up Lecture 3.</p></div>
+      <div class="remember"><div><b>Common confusion</b>u is future maturity; t is the information time when the forecast is made.</div><div><b>Memory rule</b>ξₜ(u) = today's Q-expectation of future variance.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="black scholes pde ito theta gamma">
+    <summary><span class="lesson-num">24</span><span><small>Pricing PDE</small><strong>Deriving the Black-Scholes-Merton PDE under Q</strong></span><em>p. 24</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>With deterministic variance, a European option price is a function C(t,Sₜ).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Under the pricing measure and zero rates, the option price is a martingale, so its predictable drift must vanish.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dC = Cₜdt + CₛdS + ½Cₛₛd⟨S⟩; d⟨S⟩ = VₜSₜ²dt; therefore Cₜ + ½VₜS²Cₛₛ = 0.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Apply Itô's lemma to C(t,Sₜ).</li><li>Under Q with zero rates, dSₜ = Sₜ√Vₜ dZₜ, so Eₜ[dSₜ]=0.</li><li>The quadratic variation is d⟨S⟩ₜ = VₜSₜ²dt.</li><li>Take the conditional expectation of dC.</li><li>Only the dt terms remain in the conditional mean.</li><li>Set their coefficient equal to zero because C is a Q-martingale.</li><li>This yields Cₜ + ½VₜS²Cₛₛ = 0.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is the simplest example of the martingale-implies-zero-drift reasoning reused throughout the course.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Delta hedging is consistent with the same equation, but the PDE comes from the no-arbitrage pricing drift condition.</div><div><b>Memory rule</b>Under Q, discounted price drift = 0.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="heston pde vega vanna volga">
+    <summary><span class="lesson-num">25</span><span><small>Pricing PDE</small><strong>Heston PDE and the Greek decomposition</strong></span><em>pp. 24–25</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>With stochastic variance, option value depends on both spot and variance, so Itô generates variance and cross-variation terms.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Each additional stochastic state variable creates additional sensitivities and covariance terms.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">0 = Cₜ + ½VS²Cₛₛ − λ(V−V̄)Cᵥ + ρηSV Cₛᵥ + ½η²V Cᵥᵥ.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from C(t,S,V) and apply the two-variable Itô formula.</li><li>Use dS = S√V dZ and dV = −λ(V−V̄)dt + η√V dW.</li><li>Use d⟨S⟩=S²Vdt, d⟨V⟩=η²Vdt, and d⟨S,V⟩=ρηSVdt.</li><li>Collect every dt term and set the pricing drift to zero.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The mnemonic is theta + gamma + variance-drift/vega + vanna + volga = 0.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Vega is first-order volatility/variance sensitivity; vanna and volga arise because both spot and variance diffuse.</div><div><b>Memory rule</b>More state variables → more generator terms.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="delta hedge gamma hedge straddle homework">
+    <summary><span class="lesson-num">26</span><span><small>Hedging</small><strong>Delta hedge and gamma hedge</strong></span><em>Course review / HW2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>A nonlinear option has first-order and second-order exposure to spot. Delta hedging removes the local linear exposure; gamma hedging removes the local curvature mismatch.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Stock has delta but essentially zero gamma, so stock alone cannot neutralize an option portfolio's gamma. A second option is needed.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Δ = ∂V/∂S; Γ = ∂²V/∂S²; for a small move ΔS: change in value ≈ Δ·ΔS + ½Γ(ΔS)².</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Suppose the existing option portfolio has delta ΔP and gamma ΓP.</li><li>Choose another option with gamma ΓH.</li><li>Set total gamma to zero: ΓP + nH·ΓH = 0.</li><li>Solve nH = −ΓP/ΓH.</li><li>Adding that hedge option changes portfolio delta to ΔP + nH·ΔH.</li><li>Now use stock, whose gamma is zero and delta is one per share.</li><li>Choose nS = −(ΔP + nH·ΔH) shares so the final total delta is zero.</li><li>Because Greeks change when spot and time change, the hedge must be rebalanced.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Gamma hedging reduces curvature risk but does not eliminate vega, volga, jump risk, transaction costs, or model risk.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A delta-hedged long straddle can still lose money if realized movement is too small relative to implied volatility and time decay.</div><div><b>Memory rule</b>Hedge gamma with an option first; clean up delta with stock second.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="multifactor stochastic volatility completeness">
+    <summary><span class="lesson-num">27</span><span><small>Model dimension</small><strong>Multi-factor stochastic volatility and completeness</strong></span><em>p. 25</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>One-factor stochastic volatility cannot dynamically span an arbitrarily rich option surface; more volatility factors provide more degrees of freedom.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A richer surface contains multiple independent directions of movement, so one latent variance state may be too restrictive.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">n volatility factors provide n independent volatility-state directions in the model.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Factor dimension trades off calibration flexibility, hedging realism, and computational cost.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Market completeness depends on what securities are tradable, not only on how many Brownian motions appear in the SDE.</div><div><b>Memory rule</b>More independent surface motions require more factors.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="butterfly breeden litzenberger finite difference">
+    <summary><span class="lesson-num">28</span><span><small>Risk-neutral density</small><strong>Butterfly spreads as a discrete second derivative</strong></span><em>pp. 26–27</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>A tight call butterfly concentrates payoff near its center strike.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Second derivatives measure curvature; a three-strike butterfly is the finite-difference version of call-price curvature in strike.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">[C(K−ΔK) − 2C(K) + C(K+ΔK)]/(ΔK)² → ∂²C/∂K² = pQ(K).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Long one call at strike K−ΔK.</li><li>Short two calls at strike K.</li><li>Long one call at strike K+ΔK.</li><li>Divide the butterfly price by (ΔK)².</li><li>Shrink ΔK. The finite difference converges to the strike second derivative.</li><li>By Breeden-Litzenberger, that second derivative is the risk-neutral density.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This gives a trading intuition for both risk-neutral density extraction and the denominator of Dupire local variance.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A finite-width butterfly is not literally a probability density value until the spacing is normalized and taken small.</div><div><b>Memory rule</b>Butterfly ≈ strike curvature ≈ density.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="tanaka formula local time call payoff">
+    <summary><span class="lesson-num">29</span><span><small>Local time</small><strong>Tanaka's formula behind the call payoff</strong></span><em>p. 30</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The kink in (S−K)+ prevents ordinary twice-differentiable Itô from applying directly; Tanaka's formula adds a local-time term.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The local-time term records quadratic variation accumulated when the process visits the strike.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">(S_T−K)+ = (S_0−K)+ + ∫₀ᵀ 1{Sₜ&gt;K} dSₜ + ½∫₀ᵀ VₜSₜ² δ(Sₜ−K)dt.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Tanaka gives a rigorous pathwise foundation for the formal Dirac-delta derivation used to obtain local variance as a conditional expectation.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The Dirac delta represents local-time concentration at the strike; it is not an ordinary finite-valued function.</div><div><b>Memory rule</b>Kink + quadratic variation → local time.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="local stochastic volatility lsv synthesis">
+    <summary><span class="lesson-num">30</span><span><small>Model synthesis</small><strong>Local stochastic volatility and the Lecture 2 endpoint</strong></span><em>pp. 34–37</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Pure local volatility can fit today's vanilla surface exactly, while stochastic volatility has richer surface dynamics. Local stochastic volatility combines both ideas.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A local multiplier handles exact cross-sectional calibration while a stochastic variance factor supplies realistic random volatility dynamics.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dSₜ/Sₜ = L(Sₜ,t)√Vₜ dZₜ; calibration condition: L(K,t)² E[Vₜ | Sₜ=K] = σℓ(K,t)².</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from the stochastic variance factor Vₜ.</li><li>Multiply spot diffusion by a local scale L(S,t).</li><li>Condition instantaneous variance L²V on Sₜ=K.</li><li>Choose L so this conditional expectation matches the Dupire local variance inferred from vanilla prices.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>LSV is a practical compromise when both exact vanilla calibration and stochastic smile dynamics matter.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Local volatility is not simply wrong and stochastic volatility right; they solve different parts of the calibration-dynamics problem.</div><div><b>Memory rule</b>Local fit × stochastic dynamics = LSV.</div></div>
+    </div>
+  </details>
 </div>
 </section>
 
