@@ -703,6 +703,346 @@ a{color:inherit}
     </div>
   </details>
 </div>
+
+<div class="module" data-module-panel="l3">
+  <div class="module-intro">
+    <h2>Lecture 3 · Affine models</h2>
+    <p>Forward variance unifies classical and rough Heston. The lecture then uses affine transform structure, convolutions, fractional calculus, and Riccati equations to derive characteristic functions and study variance memory.</p>
+    <div class="module-path"><span>Forward variance</span><span>Conditional expectation</span><span>Kernels</span><span>Affine CGF</span><span>Riccati</span><span>Characteristic function</span><span>ACF</span></div>
+  </div>
+  
+  <details class="lesson" data-keywords="affine lecture map forward variance characteristic function">
+    <summary><span class="lesson-num">01</span><span><small>Affine models</small><strong>How Lecture 3 fits the course</strong></span><em>p. 1</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Lecture 3 rewrites classical and rough Heston in one forward-variance language and then exploits affine structure to compute transforms.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Forward variance separates the known curve today from future variance shocks. Affine structure makes the logarithm of a transform linear in the state.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Heston / rough Heston → forward variance ξₜ(u) → affine CGF → Riccati equation → characteristic function → option prices.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Characteristic functions make European option pricing and calibration much faster than solving a full pricing PDE for every strike.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Affine does not mean the variance path itself is a straight line; it refers to the transform's dependence on the state.</div><div><b>Memory rule</b>Affine structure turns stochastic dynamics into deterministic transform equations.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="conditional expectation conditional average forward variance">
+    <summary><span class="lesson-num">02</span><span><small>Conditional expectation</small><strong>What ξₜ(u)=Eₜ[Vᵤ] means</strong></span><em>pp. 1–2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Forward variance is the expected instantaneous variance at a future time u conditional on all information available at time t.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A conditional average holds today's information fixed and averages only over future scenarios that remain possible.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">ξₜ(u) = E[Vᵤ | Fₜ], for u ≥ t; at u=t, ξₜ(t)=Vₜ.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Pick the future random quantity Vᵤ.</li><li>Condition on the information set Fₜ, meaning everything known at time t.</li><li>Imagine all future paths consistent with that information.</li><li>Average Vᵤ across those future paths.</li><li>If u=t, there is no future uncertainty about the current variance, so ξₜ(t)=Vₜ.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Forward variance is a natural state variable for volatility derivatives and for the affine models used in this lecture.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Conditional expectation is not an average of past observations; it is an average over possible futures given current information.</div><div><b>Memory rule</b>Conditional average = average futures while holding today's information fixed.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="forward variance ODE conditional expectation heston">
+    <summary><span class="lesson-num">03</span><span><small>Forward variance</small><strong>Deriving the Heston forward-variance ODE</strong></span><em>p. 2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Taking a conditional expectation of the Heston variance SDE removes the future Brownian shock and leaves a deterministic ODE in the future-maturity variable u.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The Brownian increment has conditional mean zero. Mean reversion survives because it is the predictable part of future variance dynamics.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Heston: dVᵤ = −λ(Vᵤ−V̄)du + η√Vᵤ dWᵤ. Therefore ∂ᵤξₜ(u) = −λ[ξₜ(u)−V̄].</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Fix today's information time t and let u move into the future.</li><li>Take Eₜ[·] on both sides of the variance SDE.</li><li>Use Eₜ[Vᵤ]=ξₜ(u).</li><li>The stochastic increment satisfies Eₜ[√Vᵤ dWᵤ]=0.</li><li>What remains is dξₜ(u)=−λ[ξₜ(u)−V̄]du.</li><li>Divide by du to get ∂ᵤξₜ(u)=−λ[ξₜ(u)−V̄].</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The forward curve approaches the long-run variance as maturity u moves away from today.</p></div>
+      <div class="remember"><div><b>Common confusion</b>This ODE evolves in u, the future maturity. It is different from the stochastic t-dynamics of the forward curve.</div><div><b>Memory rule</b>In u: deterministic mean reversion.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="ODE solution exponential mean reversion heston">
+    <summary><span class="lesson-num">04</span><span><small>ODE solution</small><strong>Solving the forward-variance ODE step by step</strong></span><em>p. 2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The Heston forward variance curve decays exponentially from current variance toward the long-run mean.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Subtract the equilibrium V̄ first. The deviation from equilibrium obeys the simplest exponential-decay ODE.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">ξₜ(u) = V̄ + (Vₜ−V̄)e^(−λ(u−t)).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from ∂ᵤξₜ(u)=−λ[ξₜ(u)−V̄].</li><li>Define y(u)=ξₜ(u)−V̄.</li><li>Then y′(u)=−λy(u).</li><li>Separate variables: dy/y = −λ du.</li><li>Integrate from t to u: log y(u) − log y(t) = −λ(u−t).</li><li>Exponentiate: y(u)=y(t)e^(−λ(u−t)).</li><li>Use ξₜ(t)=Vₜ, hence y(t)=Vₜ−V̄.</li><li>Substitute back: ξₜ(u)=V̄+(Vₜ−V̄)e^(−λ(u−t)).</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This exponential loading becomes the classical Heston kernel in forward-variance form.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Do not memorize the final exponential without noticing the boundary condition at u=t.</div><div><b>Memory rule</b>Subtract mean → solve exponential decay → add mean back.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="martingale in t tower property forward variance">
+    <summary><span class="lesson-num">05</span><span><small>Martingale</small><strong>Why ξₜ(u) is a martingale in t</strong></span><em>p. 2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>For each fixed future date u, ξₜ(u) changes when new information arrives, but has no predictable drift as information time t advances.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A conditional expectation of a fixed future random variable is a martingale with respect to the growing information set.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">For s&lt;t&lt;u: Eₛ[ξₜ(u)] = E[E[Vᵤ|Fₜ] | Fₛ] = E[Vᵤ|Fₛ] = ξₛ(u).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Fix the future maturity u.</li><li>Take two information times s&lt;t&lt;u.</li><li>Start from ξₜ(u)=E[Vᵤ|Fₜ].</li><li>Condition again at the earlier time s: E[ξₜ(u)|Fₛ].</li><li>Apply the tower property because Fₛ is contained in Fₜ.</li><li>The nested conditional expectations collapse to E[Vᵤ|Fₛ]=ξₛ(u).</li><li>That is exactly the martingale property.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>In Heston, this implies dₜξₜ(u)=ηe^(−λ(u−t))√Vₜ dWₜ with no dt drift.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Martingale does not mean constant. ξ can move randomly; it means its conditional expected change is zero.</div><div><b>Memory rule</b>In t: random with zero drift. In u: deterministic mean-reverting shape.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="kernel meaning response weight memory heston">
+    <summary><span class="lesson-num">06</span><span><small>Kernels</small><strong>What a kernel means generally</strong></span><em>pp. 2–5</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>A kernel tells us how strongly a volatility shock at time t changes forward variance at a future maturity u.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>It is a lag-dependent weighting or memory rule. The lag is τ=u−t.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dξₜ(u)=κ(u−t)√Vₜ dWₜ. Classical Heston uses κ(τ)=ηe^(−λτ).</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The shape of κ controls memory, roughness, Markovian dimension, and the transform equations.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A kernel is not automatically a probability density. Here it is a response weight.</div><div><b>Memory rule</b>Kernel = how a shock is transmitted across lags.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="heston exponential kernel forward variance">
+    <summary><span class="lesson-num">07</span><span><small>Classical Heston</small><strong>The exponential kernel</strong></span><em>p. 2</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The Heston forward curve reacts most strongly at short maturities, and the shock loading decays exponentially with future lag.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Mean reversion erases the effect of today's variance shock at rate λ.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">κH(τ)=ηe^(−λτ); dξₜ(u)=κH(u−t)√Vₜ dWₜ.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from ξₜ(u)=V̄+(Vₜ−V̄)e^(−λ(u−t)).</li><li>Only Vₜ is stochastic when t advances.</li><li>Differentiate the stochastic part with respect to Vₜ: the loading is e^(−λ(u−t)).</li><li>Since the diffusion of Vₜ is η√Vₜ dWₜ, the forward-variance diffusion is ηe^(−λ(u−t))√Vₜ dWₜ.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The exponential kernel is why one current variance state Vₜ is enough for classical Heston.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The kernel depends on lag u−t, not separately on calendar date in the time-homogeneous model.</div><div><b>Memory rule</b>Exponential kernel = finite memory summarized by one state.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="rough heston power law kernel alpha H">
+    <summary><span class="lesson-num">08</span><span><small>Rough Heston</small><strong>The power-law kernel</strong></span><em>pp. 2–3</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Rough Heston replaces exponential short-memory behavior with a singular power-law response governed by H.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Recent shocks receive very large weight at very short lags, producing rough short-scale variance paths.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">α=H+1/2; for λ=0, κ(τ)=ν τ^(α−1)/Γ(α), so dξₜ(u)=κ(u−t)√Vₜ dWₜ.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This connects the empirical roughness from Lecture 2 directly to a pricing model.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The kernel can diverge as τ approaches zero while the integrated model remains well-defined under the required integrability conditions.</div><div><b>Memory rule</b>Rough memory uses a power-law kernel.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="non markov rough heston path dependence forward curve">
+    <summary><span class="lesson-num">09</span><span><small>Non-Markovianity</small><strong>Why rough Heston cannot be summarized by Vₜ alone</strong></span><em>pp. 3–5</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>In rough Heston, the future conditional variance generally depends on historical information not recoverable from current variance alone.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A power-law memory kernel does not have the exponential semigroup property that compresses history into one number.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">E[Vᵤ | Fₜ] generally differs from E[Vᵤ | Vₜ] in rough Heston.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The natural Markov state is the entire forward-variance curve {ξₜ(u):u&gt;t}, an infinite-dimensional object.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Non-Markovian does not mean the model uses future information. It means the present finite-dimensional state does not summarize all relevant history.</div><div><b>Memory rule</b>Rough Heston remembers more than Vₜ.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="multifactor approximation exponential kernel abi jaber">
+    <summary><span class="lesson-num">10</span><span><small>Approximation</small><strong>Approximating a rough kernel with exponentials</strong></span><em>pp. 4–5</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The power-law kernel can be approximated by a weighted sum of exponential kernels.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Each exponential behaves like one mean-reverting Heston-style factor. A collection of factors can mimic long memory.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">κ(τ) ≈ Σᵢ ηᵢ e^(−λᵢτ).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Represent the power-law kernel as a continuous mixture of exponentials.</li><li>Discretize that mixture at finitely many decay rates λᵢ.</li><li>Assign weights ηᵢ to approximate the integral.</li><li>Each term can be represented by one Markov factor.</li><li>As the number of factors grows and coefficients are chosen carefully, the approximation converges to the rough kernel.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is the practical bridge between rough volatility and finite-dimensional simulation or calibration.</p></div>
+      <div class="remember"><div><b>Common confusion</b>More factors improve kernel fit but increase computational and calibration complexity.</div><div><b>Memory rule</b>Rough kernel ≈ many exponential Heston-like factors.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="affine process definition log characteristic function">
+    <summary><span class="lesson-num">11</span><span><small>Affine definition</small><strong>What affine means in this course</strong></span><em>p. 5</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>An affine model has a log transform that depends on state variables through a linear term plus a constant.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The stochastic system may be nonlinear pathwise, yet its transform can still have a simple affine form.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">log E[e^(zX_T) | Xₜ=x] = A(T−t,z) + B(T−t,z)x.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Affine transform structure often reduces pricing to deterministic Riccati equations.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Affine does not mean the sample path Xₜ is a linear function of time.</div><div><b>Memory rule</b>Affine = log transform is linear plus constant in state.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="affine cgf forward variance g">
+    <summary><span class="lesson-num">12</span><span><small>Affine CGF</small><strong>Affine structure with a curve-valued state</strong></span><em>p. 6</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>For an affine forward-variance model, the conditional cumulant generating function is linear in the entire current forward-variance curve.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Because the state is a curve rather than one number, the affine loading is an integral over future maturities.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">log Eₜ[e^(z(X_T−Xₜ))] = ∫ₜᵀ g(T−s;z) ξₜ(s) ds.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Once the deterministic function g is known, today's forward curve determines the entire conditional transform.</p></div>
+      <div class="remember"><div><b>Common confusion</b>z is the transform argument; it is unrelated to the future-time variable u used in ξₜ(u).</div><div><b>Memory rule</b>Curve-valued affine state → integral loading g·ξ.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="affine theorem deterministic kernel">
+    <summary><span class="lesson-num">13</span><span><small>Affine theorem</small><strong>Which forward-variance models are affine?</strong></span><em>p. 6</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture states that affine forward-variance models are characterized by a deterministic lag kernel multiplying √Vₜ.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>This separable shock structure is what allows the transform drift restriction to collapse to one convolution equation.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dξₜ(u)=κ(u−t)√Vₜ dWₜ, with a deterministic nonnegative decreasing kernel κ satisfying the required integrability.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Classical Heston and rough Heston become two different kernel choices inside one common model class.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The theorem restricts the volatility of forward variance; it does not require the initial forward curve to be flat.</div><div><b>Memory rule</b>Affine forward variance = deterministic lag kernel × √V shock.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="martingale transform M affine">
+    <summary><span class="lesson-num">14</span><span><small>Transform martingale</small><strong>Why Mₜ=Eₜ[e^(zX_T)] is a martingale</strong></span><em>pp. 6–7</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The conditional transform of a fixed terminal payoff is itself a martingale in information time.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>This is the same tower-property logic used earlier for forward variance, now applied to an exponential terminal payoff.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Mₜ = Eₜ[e^(zX_T)] = exp{zXₜ + Gₜ}; Gₜ = ∫ₜᵀ ξₜ(s)g(T−s;z)ds.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>For s&lt;t, take Eₛ[Mₜ].</li><li>Substitute Mₜ=E[e^(zX_T)|Fₜ].</li><li>Apply the tower property.</li><li>Eₛ[Mₜ]=E[e^(zX_T)|Fₛ]=Mₛ.</li><li>Therefore the predictable drift of Mₜ must be zero.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>That zero-drift restriction determines the Riccati equation for g.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A martingale may still have stochastic diffusion terms; zero drift does not mean zero movement.</div><div><b>Memory rule</b>Conditional transform ⇒ martingale ⇒ zero drift.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="riccati derivation log spot G dynamics">
+    <summary><span class="lesson-num">15</span><span><small>Riccati derivation</small><strong>Step 1: dynamics of log spot and Gₜ</strong></span><em>pp. 6–7</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>To derive the transform equation, the lecture computes the dynamics of Xₜ=log Sₜ and of the forward-variance integral Gₜ.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Both stochastic terms are proportional to √Vₜ, which is why all drift terms can be factored by Vₜ.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dXₜ = −½Vₜdt + √Vₜ dZₜ.  dGₜ = −Vₜg(τ;z)dt + (κ⋆g)(τ;z)√Vₜ dWₜ, where τ=T−t.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>For Xₜ=log Sₜ, apply Itô to dSₜ/Sₜ=√VₜdZₜ.</li><li>The Itô correction gives the −½Vₜdt term.</li><li>For Gₜ, differentiate an integral whose lower limit is t.</li><li>The moving lower limit contributes −ξₜ(t)g(T−t;z)dt = −Vₜg(τ;z)dt.</li><li>Insert dξₜ(s)=κ(s−t)√VₜdWₜ into the remaining integral.</li><li>Change variables to recognize the convolution (κ⋆g)(τ;z).</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This calculation prepares every piece needed to apply Itô to Mₜ.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The minus sign in the G drift comes from the moving lower integration limit.</div><div><b>Memory rule</b>Differentiate lower limit + forward-curve shock.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="riccati equation ito derivation convolution">
+    <summary><span class="lesson-num">16</span><span><small>Riccati derivation</small><strong>Step 2: quadratic variations and drift cancellation</strong></span><em>p. 7</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Itô's formula for an exponential requires the quadratic-variation and cross-variation terms.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Because X and G share correlated Brownian shocks, the cross term is essential and produces the ρ term in the Riccati equation.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">d⟨X⟩=Vdt; d⟨G⟩=V(κ⋆g)²dt; d⟨X,G⟩=ρV(κ⋆g)dt.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Write M=e^(zX+G).</li><li>Apply Itô: dM/M = z dX + dG + ½z²d⟨X⟩ + ½d⟨G⟩ + z d⟨X,G⟩.</li><li>Insert the dynamics from the previous lesson.</li><li>Collect all dt terms; each contains a factor Vₜdt.</li><li>The drift coefficient is −½z − g + ½z² + ρz(κ⋆g) + ½(κ⋆g)².</li><li>Set it equal to zero because M is a martingale.</li><li>Rearrange to obtain g(τ;z)=½(z²−z)+ρz(κ⋆g)(τ;z)+½(κ⋆g)(τ;z)².</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This convolution Riccati equation is the central transform equation for the affine forward-variance class.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The ½(z²−z) term combines the log-price drift and the Itô correction; neither piece alone gives the full term.</div><div><b>Memory rule</b>Apply Itô, collect Vdt, set drift to zero.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="convolution kernel g integral">
+    <summary><span class="lesson-num">17</span><span><small>Convolution</small><strong>What (κ⋆g)(τ) means</strong></span><em>p. 7</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The Riccati equation uses a convolution of the memory kernel κ with the transform loading g.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A convolution adds contributions from all intermediate lags. The kernel says how a shock at one lag influences the remaining horizon.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">(κ⋆g)(τ) = ∫₀^τ κ(τ−s)g(s)ds.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Fix the total lag τ.</li><li>For each intermediate lag s between 0 and τ, evaluate g(s).</li><li>Weight it by κ(τ−s), the response over the remaining lag.</li><li>Integrate those weighted contributions over all s.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Convolution notation lets exponential and power-law memory share the same transform framework.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Convolution is an integral operation, not ordinary multiplication.</div><div><b>Memory rule</b>Slide, multiply, integrate over lag.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="fractional calculus integral derivative gamma">
+    <summary><span class="lesson-num">18</span><span><small>Fractional calculus</small><strong>Fractional integration as generalized repeated integration</strong></span><em>p. 8</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The rough power-law kernel naturally introduces fractional integrals and derivatives.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Repeated ordinary integration already produces a power-law kernel. Replacing factorials by Gamma functions lets the integration order become non-integer.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">I^α f(t) = [1/Γ(α)]∫₀ᵗ(t−s)^(α−1)f(s)ds;  D^α f(t) = d/dt [I^(1−α)f(t)].</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This notation turns rough-Heston convolution equations into fractional Riccati differential equations.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A fractional derivative is a memory operator; it is not simply 'differentiate α times' in the elementary sense.</div><div><b>Memory rule</b>Gamma function lets integration order become fractional.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="cauchy repeated integration fractional gamma">
+    <summary><span class="lesson-num">19</span><span><small>Fractional calculus</small><strong>Deriving Cauchy's repeated-integration formula</strong></span><em>p. 8</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The lecture first derives the ordinary n-fold integration kernel before extending n to a fractional α.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Nested integrations fill a triangular region. Swapping integration order turns that region into one power-of-time weighting.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Iⁿf(t) = 1/(n−1)! ∫₀ᵗ (t−s)^(n−1) f(s) ds.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Assume the formula holds for n.</li><li>Write I^(n+1)f(t)=∫₀ᵗ Iⁿf(s)ds.</li><li>Insert Iⁿf(s)=1/(n−1)! ∫₀ˢ(s−r)^(n−1)f(r)dr.</li><li>Swap the order of integration over 0≤r≤s≤t.</li><li>The inner integral becomes ∫ᵣᵗ(s−r)^(n−1)ds = (t−r)^n/n.</li><li>Combine n(n−1)! = n!.</li><li>Therefore I^(n+1)f(t)=1/n! ∫₀ᵗ(t−r)^n f(r)dr.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The formula explains why the rough kernel with Γ(α) is a natural continuation of ordinary repeated integration.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Γ(n)=(n−1)!, so the Gamma function is the bridge from integer to fractional order.</div><div><b>Memory rule</b>Repeated integrals collapse to one power-law kernel.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="rough heston fractional riccati lambda zero">
+    <summary><span class="lesson-num">20</span><span><small>Rough Riccati</small><strong>The λ=0 fractional Riccati equation</strong></span><em>pp. 8–9</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>With a pure power-law kernel, the convolution Riccati equation can be rewritten as a fractional differential equation.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Define h to absorb the convolution. The fractional derivative then inverts the fractional integral.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Let h=(κ⋆g)=ν I^αg. Then D^αh=νg. Substitution gives a quadratic fractional Riccati equation in h.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from κ(τ)=ντ^(α−1)/Γ(α).</li><li>Then (κ⋆g)(τ)=ν I^αg(τ). Define this quantity as h(τ).</li><li>Apply D^α: D^αh=νg.</li><li>Replace every occurrence of (κ⋆g) in the affine Riccati equation by h.</li><li>Replace g by D^αh/ν.</li><li>Rearrange to get the fractional Riccati equation.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Rough-Heston transforms are solved with fractional rather than ordinary Riccati dynamics.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Different papers scale h and ν differently; keep one convention consistent before comparing formulas.</div><div><b>Memory rule</b>Power-law convolution becomes fractional differentiation.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="mittag leffler kernel rough heston">
+    <summary><span class="lesson-num">21</span><span><small>Mittag-Leffler</small><strong>The fractional analogue of exponential mean reversion</strong></span><em>p. 9</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>With mean reversion, the rough-Heston kernel becomes a Mittag-Leffler kernel.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The exponential solves ordinary first-order relaxation; Mittag-Leffler plays an analogous role for fractional relaxation.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">κ(τ)=ν τ^(α−1) E(α,α)(−λτ^α), where E(α,β)(z)=Σ(k≥0) z^k / Γ(αk+β).</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This kernel smoothly connects rough power-law memory with the classical exponential limit.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Mittag-Leffler is a special function family, not a probability distribution.</div><div><b>Memory rule</b>Fractional mean reversion uses Mittag-Leffler instead of exp.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="laplace transform convolution rough kernel">
+    <summary><span class="lesson-num">22</span><span><small>Laplace transforms</small><strong>Why Laplace space simplifies memory equations</strong></span><em>pp. 9–10</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>Convolutions become products under the Laplace transform, turning integral equations into algebra.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Laplace space is the natural transform domain for causal lag kernels.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Laplace{f⋆g}(p)=f̂(p)ĝ(p);  κ̂₀(p)=ν/p^α;  κ̂(p)=ν/(p^α+λ).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Take the Laplace transform of the convolution equation.</li><li>Replace each convolution by a product.</li><li>Solve the resulting algebraic equation for κ̂(p).</li><li>Invert the transform to recover the time-domain Mittag-Leffler kernel.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is the cleanest route to the mean-reverting rough kernel and its resolvent identity.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The Laplace variable p is a transform variable for lag, not a stock price.</div><div><b>Memory rule</b>Convolution in time = multiplication in Laplace space.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="resolvent identity kappa power law mittag leffler">
+    <summary><span class="lesson-num">23</span><span><small>Resolvent</small><strong>Deriving the resolvent identity</strong></span><em>p. 10</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The Mittag-Leffler kernel is the resolvent of the pure power-law kernel once mean reversion is introduced.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The resolvent is the feedback-adjusted memory kernel after repeatedly accounting for the drift interaction.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">κ₀ − κ = λ′(κ₀⋆κ), where λ′=λ/ν.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start in Laplace space with κ̂ = κ̂₀ / [1 + λ′κ̂₀].</li><li>Multiply both sides by 1 + λ′κ̂₀.</li><li>Obtain κ̂ + λ′κ̂₀κ̂ = κ̂₀.</li><li>Rearrange: κ̂₀ − κ̂ = λ′κ̂₀κ̂.</li><li>Apply the inverse Laplace transform.</li><li>The product κ̂₀κ̂ becomes the convolution κ₀⋆κ.</li><li>This yields κ₀−κ = λ′κ₀⋆κ.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The identity lets the mean-reverting rough-Heston model retain the affine forward-variance form.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A resolvent here is an exact kernel identity, not merely a numerical approximation.</div><div><b>Memory rule</b>Feedback-adjusted kernel = resolvent.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="rough heston mean reversion forward variance">
+    <summary><span class="lesson-num">24</span><span><small>Rough Heston</small><strong>Forward variance with mean reversion</strong></span><em>pp. 10–11</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>After mean reversion is resolved, the forward-variance shock still has affine kernel form, now using the Mittag-Leffler kernel.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Mean reversion changes the memory shape without destroying affine tractability.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">dξₜ(u)=κ(u−t)√VₜdWₜ, with κ(τ)=ντ^(α−1)E(α,α)(−λτ^α).</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This proves that rough Heston with λ&gt;0 remains inside the affine forward-variance family.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Bounded-variation drift terms disappear from the martingale dynamics of ξ; they do not disappear from the original variance equation.</div><div><b>Memory rule</b>Mean reversion reshapes κ; affine form survives.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="classical limit alpha one H half">
+    <summary><span class="lesson-num">25</span><span><small>Classical limit</small><strong>Recovering classical Heston when α=1</strong></span><em>pp. 9, 12</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The fractional model collapses to classical Heston at H=1/2, so α=1.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>At α=1, the fractional derivative becomes the ordinary first derivative and the Mittag-Leffler kernel becomes exponential.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">α=1 ⇒ H=1/2; E(1,1)(−λτ)=e^(−λτ); D^α becomes d/dτ.</div></div>
+      
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This limiting case is an important consistency check on the rough formulas.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Rough Heston usually takes H below 1/2; H=1/2 is the boundary classical case.</div><div><b>Memory rule</b>H=1/2 turns rough Heston back into Heston.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="heston riccati roots r plus minus">
+    <summary><span class="lesson-num">26</span><span><small>Classical Riccati</small><strong>Factoring the Heston Riccati ODE</strong></span><em>p. 12</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>In classical Heston, the convolution equation becomes an ordinary quadratic Riccati ODE.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>A quadratic polynomial can be expressed through its two roots, which makes the ODE separable.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">∂τh = ½η²(h−r+)(h−r−), with h(0)=0.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Write the quadratic Riccati right-hand side in standard polynomial form.</li><li>Solve the quadratic equation to obtain roots r+ and r−.</li><li>Factor the polynomial as ½η²(h−r+)(h−r−).</li><li>Now the variables h and τ can be separated.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The root representation is the starting point for the closed-form Heston transform.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The roots depend on the transform argument as well as model parameters; they are not fixed constants across Fourier frequencies.</div><div><b>Memory rule</b>Quadratic Riccati → factor by roots.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="solve riccati heston ode closed form">
+    <summary><span class="lesson-num">27</span><span><small>Classical Riccati</small><strong>Solving the Heston Riccati ODE line by line</strong></span><em>p. 12</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The factored Heston Riccati equation has a rational-exponential closed form.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Partial fractions convert the nonlinear ODE into a difference of logarithms.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">h(τ) = r−[1−e^(−dτ)] / [1−(r−/r+)e^(−dτ)], with d = ½η²(r+−r−).</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Separate variables: dh/[(h−r+)(h−r−)] = ½η² dτ.</li><li>Use partial fractions: 1/[(h−r+)(h−r−)] = [1/(r+−r−)]{1/(h−r+) − 1/(h−r−)}.</li><li>Integrate both sides.</li><li>The left side becomes a logarithm of the ratio (h−r+)/(h−r−).</li><li>Exponentiate the resulting equation.</li><li>Use h(0)=0 to determine the integration constant.</li><li>Define d=½η²(r+−r−) and solve algebraically for h.</li><li>The result is the displayed rational-exponential formula.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This closed form makes classical Heston option pricing computationally efficient.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Do not memorize the final fraction before understanding the factorization, partial fractions, and boundary condition.</div><div><b>Memory rule</b>Factor → partial fractions → logs → boundary condition.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="heston characteristic function C D">
+    <summary><span class="lesson-num">28</span><span><small>Characteristic function</small><strong>Assembling the Heston C and D functions</strong></span><em>pp. 12–13</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The affine transform separates into a loading on current variance and a loading on long-run variance.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Because the forward-variance curve is exponential, integrating g against it splits naturally into current-state and long-run-mean pieces.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">φₜ(T;a)=Eₜ[e^(iaX_T)] = exp{iaXₜ + C(a,τ)V̄ + D(a,τ)Vₜ}.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from the affine forward-variance transform integral.</li><li>Insert ξₜ(s)=V̄+(Vₜ−V̄)e^(−λ(s−t)).</li><li>The exponential-weighted integral is the h/D term.</li><li>The remaining long-run-mean contribution integrates into C.</li><li>Collect coefficients multiplying Vₜ and V̄.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The C-D representation is the standard computational form used in Heston Fourier pricing.</p></div>
+      <div class="remember"><div><b>Common confusion</b>C and D are deterministic transform functions, not additional stochastic factors.</div><div><b>Memory rule</b>Heston CF = exp(i a X + C V̄ + D V).</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="fourier inversion risk neutral density option prices implied vol">
+    <summary><span class="lesson-num">29</span><span><small>Information equivalence</small><strong>From characteristic function to density and option prices</strong></span><em>pp. 13–14</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>At one expiry, European option prices, the risk-neutral density, implied volatilities, and the characteristic function encode the same terminal distributional information under regularity conditions.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>They are different mathematical representations of the same risk-neutral law of the terminal underlying.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">φ(a)=E[e^(iaX_T)]; density p(y)=1/(2π)∫ e^(−iay)φ(a) da.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Use Fourier inversion to recover the density from φ.</li><li>Integrate option payoffs against that density to obtain European option prices.</li><li>Invert Black-Scholes price at each strike to obtain implied volatility.</li><li>Conversely, a smooth complete option-price surface gives density by strike differentiation and therefore its characteristic function by Fourier transform.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Transform methods can price a whole strike grid efficiently and are central to calibration.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Equivalent information does not mean equivalent numerical stability; each representation has different interpolation and estimation issues.</div><div><b>Memory rule</b>Surface ↔ density ↔ characteristic function.</div></div>
+    </div>
+  </details>
+  <details class="lesson" data-keywords="variance covariance autocorrelation rough classical heston H smile">
+    <summary><span class="lesson-num">30</span><span><small>Empirical diagnostics</small><strong>Variance memory and rough versus classical Heston</strong></span><em>pp. 32–45</em></summary>
+    <div class="lesson-body">
+      <div class="layer observation"><h4>Observation</h4><p>The affine kernel yields explicit variance covariance formulas. Classical Heston implies exponential memory; rough Heston produces scale-rich dependence and fits the empirical variance ACF better in the lecture experiment.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Two future variances co-move because both inherit overlapping exposures to the same earlier variance shocks. The kernel controls that overlap.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">Covₜ(V_T,V_(T+Δ)) = ∫ₜᵀ ξₜ(s)κ(T−s)κ(T+Δ−s)ds. Classical Heston gives roughly exp(−λΔ); rough Heston gives Varₜ(V_T) proportional to τ^(2H) at short scales.</div></div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>For classical Heston, insert κ(x)=ηe^(−λx).</li><li>The product of the two kernels contributes e^(−λΔ)e^(−2λ(T−s)).</li><li>After normalization by Var(V_T), the Δ-dependence is e^(−λΔ).</li><li>For rough Heston with λ=0 and flat forward variance, insert κ(x) proportional to x^(α−1).</li><li>Variance integrates κ² over the horizon: ∫₀^τ u^(2α−2)du.</li><li>Because α=H+1/2, the exponent after integration is 2α−1=2H.</li><li>Thus Var(V_T) scales like τ^(2H), matching the rough scaling studied in Lecture 2.</li></ol></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The lecture's rough-Heston ACF fit gives H around 0.16, close to the earlier roughness estimate, while smile experiments show that increasing H flattens short-dated smiles.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Autocorrelation ρV(Δ) is not the same object as the Brownian spot/variance correlation parameter ρ.</div><div><b>Memory rule</b>Kernel overlap determines memory; H links time-series roughness to option-smile behavior.</div></div>
+    </div>
+  </details>
+</div>
+
 </section>
 
 <section class="page" id="notes">
