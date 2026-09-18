@@ -17,6 +17,21 @@ Each mini-lecture should contain:
 
 Keep formulas faithful to the source and make notation consistent across lectures. When the transcript clarifies a slide, incorporate the clarification and label it as professor emphasis. Do not fabricate a quote.
 
+### Required treatment of user-asked mathematics
+
+When the user asks how a formula is derived, how an ODE/SDE is solved, where an equation comes from, or how to calculate a quantity, the website version must preserve the derivation in the relevant mini-lecture.
+
+Use a worked-steps block that:
+1. States the starting equation and assumptions.
+2. Defines every symbol that is needed for the manipulation.
+3. Shows every non-trivial intermediate step in order.
+4. Names the rule being used when useful (conditioning, tower property, Itô's lemma, product rule, separation of variables, integrating factor, change of variables, etc.).
+5. Shows substitutions explicitly.
+6. Ends with the final formula and a plain-language interpretation.
+7. Distinguishes movement in different variables when relevant (for example, forward maturity \(u\) versus information time \(t\)).
+
+Do not replace a requested derivation with phrases such as "after some algebra" or "it follows."
+
 ## Lecture Notes
 
 Each uploaded professor PDF receives one visually distinct section with:
