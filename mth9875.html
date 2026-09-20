@@ -43,11 +43,20 @@ a{color:inherit}
 .eq{margin:10px 0;padding:13px 14px;border-radius:12px;background:#f4f6f7;border:1px solid #e2e8e9;overflow-x:auto}.eq strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6a747b;margin-bottom:6px}
 .steps{margin:12px 0;border:1px solid #e5dcc7;background:#fffaf0;border-radius:13px;padding:14px}.steps h5{margin:0 0 10px;color:#85580e;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.steps ol{margin:0;padding-left:20px}.steps li{margin:8px 0;line-height:1.58;color:#4b5155}.remember{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.remember div{padding:12px;border-radius:12px;background:#f7faf9;border:1px solid var(--line);font-size:13px;line-height:1.5}.remember b{display:block;color:var(--teal2);margin-bottom:4px}
 .notes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.notes-card{padding:22px}.notes-card h2{font-family:Georgia,"Times New Roman",serif;margin:6px 0 8px}.notes-card p{color:var(--muted);line-height:1.55}.notes-card a{display:inline-flex;margin-top:10px;text-decoration:none;background:var(--teal);color:white;padding:10px 12px;border-radius:10px;font-weight:800}.notes-card .meta{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:800}
+.pdf-card{margin-bottom:30px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}
+.pdf-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:28px 30px}
+.pdf-header h2{margin:0;color:var(--ink);font:500 clamp(27px,3vw,37px) Georgia,"Times New Roman",serif}
+.pdf-header p:not(.eyebrow){margin:8px 0 0;color:var(--muted)}
+.pdf-actions{display:flex;gap:8px;flex-shrink:0}
+.pdf-actions a{padding:10px 13px;border:1px solid #94b7b4;color:var(--teal2);text-decoration:none;font-size:13px;font-weight:800}
+.pdf-actions a:first-child{border-color:var(--teal);background:var(--teal);color:#fff}
+.pdf-frame-wrap{height:min(74vh,780px);min-height:520px;background:#dfe7e7}
+.pdf-frame-wrap iframe{display:block;width:100%;height:100%;border:0}
 .flash-controls{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.flash-controls button{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:800}.flash-controls button.active{background:var(--teal);color:#fff;border-color:var(--teal)}
 .flashcard-panel{padding:24px;min-height:280px;display:grid;place-items:center;text-align:center}.flashcard{max-width:760px}.flashcard .tag{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--teal);font-weight:900}.flashcard h2{font-family:Georgia,"Times New Roman",serif;font-size:32px;margin:12px 0}.flashcard p{font-size:18px;line-height:1.65;color:#405562}.flash-actions{display:flex;gap:8px;justify-content:center;margin-top:18px}.flash-actions button{border:0;padding:10px 14px;border-radius:10px;background:#0f2d34;color:#fff;font-weight:800;cursor:pointer}.flash-actions .secondary{background:#dfe9e8;color:#254f4d}
 .hidden{display:none!important}
 @media(max-width:980px){.sidebar{display:none}.mobile-header{display:flex;position:sticky;top:0;background:#0f2d34;color:#fff;padding:12px 16px;z-index:30;justify-content:space-between;align-items:center}.main{margin-left:0}.page{padding:30px 20px 60px}.hero-grid,.notes-grid{grid-template-columns:1fr}.timeline{grid-template-columns:1fr 1fr}.guide-toolbar{top:49px;align-items:stretch;flex-direction:column}.search input{max-width:none;width:100%}}
-@media(max-width:620px){.timeline{grid-template-columns:1fr}.lesson summary{grid-template-columns:42px 1fr}.lesson summary em{display:none}.remember{grid-template-columns:1fr}}
+@media(max-width:620px){.timeline{grid-template-columns:1fr}.lesson summary{grid-template-columns:42px 1fr}.lesson summary em{display:none}.remember{grid-template-columns:1fr}.pdf-header{display:block;padding:22px}.pdf-actions{margin-top:16px}.pdf-frame-wrap{height:68vh;min-height:430px}}
 </style>
 </head>
 <body>
