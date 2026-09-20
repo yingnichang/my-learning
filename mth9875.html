@@ -503,12 +503,24 @@ a{color:inherit}
     </div>
   </details>
 
-  <details class="lesson" data-keywords="breeden litzenberger risk neutral density second strike derivative">
-    <summary><span class="lesson-num">25</span><span><small>Option surface</small><strong>Recovering the risk-neutral density from calls</strong></span><em>Key identity</em></summary>
+  <details class="lesson" data-keywords="breeden litzenberger risk neutral density second strike derivative convexity call strike butterfly">
+    <summary><span class="lesson-num">25</span><span><small>Option surface</small><strong>Recovering the risk-neutral density from calls</strong></span><em>pp. 26–27 + worked derivation</em></summary>
     <div class="lesson-body">
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[C(K,T)=E^Q[(S_T-K)^+],\qquad \frac{\partial^2 C}{\partial K^2}=\phi(K,T).\]</div>
-      <div class="steps"><h5>Derivative logic</h5><ol><li>(partial_K(S_T-K)^+=-1_{\{S_T>K\}}).</li><li>Thus (partial_K C=-Q(S_T>K)).</li><li>Differentiate again with respect to (K): (partial_{KK}C=\phi(K,T)), the density at (K).</li></ol></div></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Vanilla option prices across strikes encode the full (Q)-distribution of terminal spot.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>An arbitrage-free European call-price curve is decreasing and convex in strike. Its first strike derivative contains a tail probability, while its second strike derivative recovers the risk-neutral density.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Raising the strike removes states in which the call pays. The first derivative therefore measures the probability mass above the strike. Differentiating that tail probability once more isolates the density exactly at the strike.</p></div>
+      <div class="layer math"><h4>Mathematics</h4>
+        <div class="eq">\[C(K,T)=e^{-rT}E^Q[(S_T-K)^+]=e^{-rT}\int_K^\infty (s-K)f_{S_T}(s)\,ds.\]</div>
+        <div class="steps"><h5>Worked derivation</h5><ol>
+          <li><b>Start from risk-neutral pricing.</b> Here (K) is strike, (T) maturity, (r) the continuously compounded risk-free rate, and (f_{S_T}) the risk-neutral density of terminal spot.</li>
+          <li><b>Differentiate once with respect to strike.</b> By Leibniz' rule, the lower-limit term is (-(K-K)f_{S_T}(K)=0).</li>
+          <li>The derivative of the integrand is (\partial_K[(s-K)f_{S_T}(s)]=-f_{S_T}(s)).</li>
+          <li>Therefore \[C_K(K,T)=-e^{-rT}\int_K^\infty f_{S_T}(s)\,ds=-e^{-rT}Q(S_T&gt;K).\]</li>
+          <li><b>Differentiate again.</b> Since (\frac{d}{dK}\int_K^\infty f(s)ds=-f(K)), \[C_{KK}(K,T)=e^{-rT}f_{S_T}(K).\]</li>
+          <li>At zero rates this reduces to (C_{KK}=f_{S_T}(K)).</li>
+        </ol></div>
+      </div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Because a probability density cannot be negative, no-arbitrage requires (C_{KK}\ge 0): call prices must be convex in strike. A narrow butterfly has price (C(K-h)-2C(K)+C(K+h)\approx h^2C_{KK}(K)), so negative curvature would imply a negative-priced position with a nonnegative terminal payoff.</p></div>
+      <div class="remember"><div><b>Memory rule</b>(C_K) = minus discounted tail probability; (C_{KK}) = discounted density.</div><div><b>Common confusion</b>No-arbitrage requires (C_{KK}\ge0), not strictly positive everywhere; it can be zero where the density is zero.</div></div>
     </div>
   </details>
 
