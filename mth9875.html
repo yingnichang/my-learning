@@ -101,15 +101,16 @@ a{color:inherit}
 <div class="module active" data-module-panel="l1">
   <div class="module-intro"><h2>Lecture 1 · Stylized facts</h2><p>The lecture begins from data. The goal is to identify empirical regularities that any useful volatility model must respect.</p><div class="module-path"><span>Power laws</span><span>Returns</span><span>Volatility clustering</span><span>Roughness</span><span>Smile/skew</span><span>SSR</span></div></div>
 
-  <details class="lesson" open data-keywords="power law tail density exponent">
-    <summary><span class="lesson-num">01</span><span><small>Power laws</small><strong>Tail probability versus density</strong></span><em>Core concept</em></summary>
+  <details class="lesson" data-keywords="affine lecture map forward variance characteristic function riccati option price distribution">
+    <summary><span class="lesson-num">01</span><span><small>Affine models</small><strong>How Lecture 3 fits the course — and what we are ultimately trying to compute</strong></span><em>p. 1</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Many financial and economic quantities have tails that decay much more slowly than a Gaussian tail.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>A power law has no single characteristic scale in the tail. Very large observations remain materially more likely than under an exponential or Gaussian decay.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq"><strong>Tail law</strong>\[P(X>x)\sim Cx^{-\zeta}.\]</div><p>If the tail probability behaves like (x^{-\zeta}), then the density behaves like (x^{-(\zeta+1)}).</p>
-      <div class="steps"><h5>Worked derivation</h5><ol><li>Start from (P(X>x)\approx Cx^{-\zeta}).</li><li>The density is (f(x)=-\frac{d}{dx}P(X>x)).</li><li>Differentiate: (-\frac{d}{dx}(Cx^{-\zeta})=C\zeta x^{-(\zeta+1)}).</li><li>So the tail exponent is (zeta), while the density exponent is (zeta+1).</li></ol></div></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Always check what is plotted. A log-log slope near (-3) for a tail probability corresponds to roughly (-4) for the density.</p></div>
-      <div class="remember"><div><b>Remember</b>Tail exponent and density exponent differ by one.</div><div><b>Common trap</b>Reading a histogram slope as if it were a survival-function slope.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>Lecture 3 rewrites classical and rough Heston in one forward-variance language and then exploits affine structure to compute transforms.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p><b>The goal is not to predict one future stock price.</b> For an option maturing at \(T\), we need the whole risk-neutral distribution of possible \(S_T\) values. A call pays \((S_T-K)^+\), so two models can have the same \(E_t[S_T]\) but very different option values if one distribution is much more dispersed.</p><p>The lecture therefore follows a chain: model variance dynamics → encode the distribution of \(S_T\) with a transform → solve for the transform → recover option prices. The Riccati equation is the engine in the middle, not the final objective.</p></div>
+      <div class="layer math"><h4>Mathematics / roadmap</h4><div class="eq">\[
+        V\text{ dynamics}\;\longrightarrow\;\xi_t(u)\;\longrightarrow\;\text{affine CGF}\;\longrightarrow\;\text{Riccati}\;\longrightarrow\;\phi_T\;\longrightarrow\;\text{option prices}.
+      \]</div><p>Here \(X_t=\log S_t\), \(\xi_t(u)=E_t[V_u]\), and \(\phi\) denotes the characteristic function of the terminal log-price or log-return.</p></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Characteristic functions allow European option prices across many strikes to be computed efficiently without solving a new high-dimensional pricing PDE for every strike.</p></div>
+      <div class="remember"><div><b>Common confusion</b>We are not trying to estimate a single \(S_T\). We are trying to characterize the distribution of \(S_T\), because option value depends on the shape of that distribution.</div><div><b>Memory rule</b>Dynamics → distribution → option price; Riccati connects dynamics to the distribution.</div></div>
     </div>
   </details>
 
@@ -123,182 +124,341 @@ a{color:inherit}
     </div>
   </details>
 
-  <details class="lesson" data-keywords="pareto 80 20 zipf wealth alpha">
-    <summary><span class="lesson-num">03</span><span><small>Pareto / Zipf</small><strong>Why 80/20 implies an exponent near one</strong></span><em>Worked calculation</em></summary>
+  <details class="lesson" data-keywords="forward variance ODE conditional expectation heston parameters state">
+    <summary><span class="lesson-num">03</span><span><small>Forward variance</small><strong>Deriving the Heston forward-variance ODE</strong></span><em>p. 2</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Income, wealth, city size, and firm size often display extreme concentration.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[W=P^{1-1/\alpha}.\]</div>
-      <div class="steps"><h5>Worked 80/20 calculation</h5><ol><li>Set (P=0.2) and (W=0.8).</li><li>(0.8=0.2^{1-1/\alpha}).</li><li>Take logs: (log 0.8=(1-1/\alpha)log 0.2).</li><li>Divide: (1-1/\alpha=\log(0.8)/\log(0.2)\approx0.13865).</li><li>So (1/\alpha\approx0.86135).</li><li>(alpha\approx1/0.86135\approx1.161).</li></ol></div></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>An exponent only modestly above one means an extremely fat tail and severe concentration.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>Taking a conditional expectation of the Heston variance SDE removes the future Brownian shock and leaves a deterministic ODE in the future-maturity variable \(u\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The Brownian increment has conditional mean zero. Mean reversion survives because it is the predictable part of future variance dynamics. The ODE says: if today's variance is away from its long-run level, our expected future variance gradually moves back toward that level.</p><p><b>State versus parameters:</b> to forecast future variance we still need the fixed model parameters \(\bar V,\lambda,\eta\). Saying Heston is Markov in \(V_t\) does <i>not</i> mean those parameters are unnecessary; it means that, once the parameters are fixed, we do not also need the whole past path \(V_{t-1},V_{t-2},\ldots\).</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      dV_u=-\lambda(V_u-\bar V)\,du+\eta\sqrt{V_u}\,dW_u,
+      \qquad
+      \xi_t(u)=E_t[V_u].
+      \]</div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Fix today's information time \(t\) and let \(u\) move into the future.</li><li>Take \(E_t[\cdot]\) on both sides of the variance SDE.</li><li>Use \(E_t[V_u]=\xi_t(u)\).</li><li>The stochastic increment has conditional mean zero: \(E_t[\sqrt{V_u}\,dW_u]=0\).</li><li>Therefore \(d\xi_t(u)=-\lambda[\xi_t(u)-\bar V]du\).</li><li>Divide by \(du\): \(\partial_u\xi_t(u)=-\lambda[\xi_t(u)-\bar V]\).</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The forward curve approaches the long-run variance as the maturity \(u\) moves away from today.</p></div>
+      <div class="remember"><div><b>Common confusion</b>This ODE evolves in \(u\), the future maturity. It is different from the stochastic \(t\)-dynamics of the forward curve.</div><div><b>Memory rule</b>Parameters tell the rules; \(V_t\) is the current state; history is unnecessary in classical Heston.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="returns log return gaussian student t cubic law">
-    <summary><span class="lesson-num">04</span><span><small>Returns</small><strong>Log returns are not Gaussian</strong></span><em>Empirical foundation</em></summary>
+  <details class="lesson" data-keywords="ODE solution exponential mean reversion heston forward variance">
+    <summary><span class="lesson-num">04</span><span><small>ODE solution</small><strong>Solving the forward-variance ODE step by step</strong></span><em>p. 2</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>SPX daily log returns have a sharper center and much fatter tails than a normal distribution.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[r_t=\log\frac{S_t}{S_{t-1}}.\]</div><div class="eq">\[P(|r|>x)\sim x^{-3}\quad\Rightarrow\quad f(r)\sim |r|^{-4}.\]</div></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>A Student-(t) with about three degrees of freedom mimics this empirical tail behavior much better than a Gaussian.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>A constant-volatility Gaussian model cannot reproduce the empirical frequency of extreme daily moves.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>The Heston forward variance curve decays exponentially from current variance toward the long-run mean.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>First measure the distance from equilibrium, \(V-\bar V\). Heston says that distance shrinks at a constant proportional rate \(\lambda\), exactly like exponential cooling or decay. If \(V_t>\bar V\), the expected curve slopes down; if \(V_t<\bar V\), it slopes up.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      \xi_t(u)=\bar V+(V_t-\bar V)e^{-\lambda(u-t)}.
+      \]</div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from \(\partial_u\xi_t(u)=-\lambda[\xi_t(u)-\bar V]\).</li><li>Define \(y(u)=\xi_t(u)-\bar V\).</li><li>Then \(y'(u)=-\lambda y(u)\).</li><li>Separate variables: \(dy/y=-\lambda\,du\).</li><li>Integrate from \(t\) to \(u\): \(\log y(u)-\log y(t)=-\lambda(u-t)\).</li><li>Exponentiate: \(y(u)=y(t)e^{-\lambda(u-t)}\).</li><li>Use \(\xi_t(t)=V_t\), so \(y(t)=V_t-\bar V\).</li><li>Add \(\bar V\) back.</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The very rigid exponential shape is one reason classical Heston cannot reproduce every empirically observed variance-memory pattern.</p></div>
+      <div class="remember"><div><b>Common confusion</b>\(\bar V\) is a fixed long-run model parameter here, not another random state variable.</div><div><b>Memory rule</b>Subtract the mean → exponential decay → add the mean back.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="power law infinity exponential moment stock price finite moment">
-    <summary><span class="lesson-num">05</span><span><small>Tail truncation</small><strong>Why a financial power law cannot continue forever</strong></span><em>Conceptual proof</em></summary>
+  <details class="lesson" data-keywords="martingale in t tower property forward variance conditional expectation">
+    <summary><span class="lesson-num">05</span><span><small>Martingale</small><strong>Why a conditional expectation is a martingale</strong></span><em>p. 2</em></summary>
     <div class="lesson-body">
-      <div class="layer intuition"><h4>Intuition</h4><p>Stock prices are exponentials of log returns. If positive log-return tails stayed power-law forever, exponential moments could blow up.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[S=e^X,\qquad E[S]=E[e^X].\]</div><p>A polynomially decaying positive tail is not enough to control the exponential factor (e^X) at infinity.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Interpret empirical “power law” as scaling over a substantial range, not as a literal law from zero to infinity.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>For each fixed future date \(u\), \(\xi_t(u)=E[V_u\mid\mathcal F_t]\) changes as new information arrives, but its change has no predictable direction.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Think of \(V_u\) as one fixed future outcome that we keep re-forecasting. At 9am your best estimate might be 4%. At noon it may become 5% or 3% after new information. Before the noon information arrives, however, your best expectation of the noon forecast is still the 9am forecast. Otherwise you should already revise the 9am forecast now.</p><p>So a martingale does <b>not</b> mean the forecast stays constant. It means forecast revisions are unpredictable with the information currently available.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      \xi_t(u)=E[V_u\mid\mathcal F_t].
+      \]</div>
+      <div class="steps"><h5>Tower-property proof</h5><ol><li>Fix the future maturity \(u\).</li><li>Take two information times \(s<t<u\).</li><li>Start from \(\xi_t(u)=E[V_u\mid\mathcal F_t]\).</li><li>At time \(s\), ask for the expected later forecast: \(E[\xi_t(u)\mid\mathcal F_s]\).</li><li>Apply the tower property: \(E[E[V_u\mid\mathcal F_t]\mid\mathcal F_s]=E[V_u\mid\mathcal F_s]\).</li><li>The right side is \(\xi_s(u)\).</li><li>Thus \(E_s[\xi_t(u)]=\xi_s(u)\), the martingale property.</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Because \(\xi_t(u)\) is a martingale in information time \(t\), its SDE has no predictable \(dt\) drift under the pricing measure. This lets us focus on the diffusion term when deriving forward-variance dynamics.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Martingale in \(t\) does not mean flat as a function of maturity \(u\). The forward curve can slope in \(u\) while each fixed-\(u\) forecast is a martingale in \(t\).</div><div><b>Memory rule</b>Today's best forecast of tomorrow's best forecast equals today's best forecast.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="autocorrelation return volatility clustering absolute squared">
-    <summary><span class="lesson-num">06</span><span><small>Stylized facts</small><strong>Returns are hard to predict; volatility is persistent</strong></span><em>Core intuition</em></summary>
+  <details class="lesson" data-keywords="kernel meaning response weight memory heston">
+    <summary><span class="lesson-num">06</span><span><small>Kernels</small><strong>What a kernel means generally</strong></span><em>pp. 2–5</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Raw returns have little serial correlation, while (|r_t|) and (r_t^2) exhibit persistent autocorrelation.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>The sign of tomorrow’s return is difficult to forecast, but the scale of tomorrow’s move is much more predictable.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Volatility itself should be a state variable with persistence. This is the empirical motivation for stochastic volatility.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>A kernel tells us how strongly a volatility shock at time \(t\) changes forward variance at a future maturity \(u\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Think of the kernel as a <b>memory weighting function</b>. A shock happens today. The kernel answers: how much of that shock is still felt one day, one week, one month, or one year from now?</p><p>An exponential kernel has one characteristic decay speed. A power-law kernel has no single decay speed; it blends many timescales and therefore carries richer memory.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      d\xi_t(u)=\kappa(u-t)\sqrt{V_t}\,dW_t.
+      \]</div><p>The lag is \(\tau=u-t\). Classical Heston uses \(\kappa(\tau)=\eta e^{-\lambda\tau}\).</p></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The shape of \(\kappa\) controls memory, roughness, how many state factors are needed, and the form of the transform equation.</p></div>
+      <div class="remember"><div><b>Common confusion</b>A kernel is not a probability density here; it is a response weight.</div><div><b>Memory rule</b>Kernel = how today's shock echoes across future horizons.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="business time integrated variance random clock">
-    <summary><span class="lesson-num">07</span><span><small>Business time</small><strong>Integrated variance as a random clock</strong></span><em>Bridge to SV</em></summary>
+  <details class="lesson" data-keywords="heston exponential kernel forward variance one factor state">
+    <summary><span class="lesson-num">07</span><span><small>Classical Heston</small><strong>The exponential kernel and why one state is enough</strong></span><em>p. 2</em></summary>
     <div class="lesson-body">
-      <div class="layer intuition"><h4>Intuition</h4><p>A calendar day can contain very different amounts of “financial time.” Quiet days are short in business time; crisis days are long.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\tau(t)=\int_0^t v_s\,ds.\]</div><p>Conditionally on a path of variance, Brownian returns accumulate variance according to this random clock.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Mixtures of Gaussian returns with different realized variances naturally create a high central peak and fat unconditional tails.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>The Heston forward curve reacts most strongly at short maturities, and the shock loading decays exponentially with future lag.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>An exponential has a special “forgetting” property: once you know the current value of the exponentially weighted memory, you do not need to reconstruct the whole past. That is why classical Heston can compress volatility history into one current variance state \(V_t\) (given fixed parameters).</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      \kappa_H(\tau)=\eta e^{-\lambda\tau},
+      \qquad
+      d\xi_t(u)=\kappa_H(u-t)\sqrt{V_t}\,dW_t.
+      \]</div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from \(\xi_t(u)=\bar V+(V_t-\bar V)e^{-\lambda(u-t)}\).</li><li>For a fixed maturity \(u\), new randomness enters through \(V_t\).</li><li>The loading of a change in \(V_t\) is \(e^{-\lambda(u-t)}\).</li><li>The diffusion of \(V_t\) is \(\eta\sqrt{V_t}dW_t\).</li><li>Multiply the loading by that diffusion to obtain \(\eta e^{-\lambda(u-t)}\sqrt{V_t}dW_t\).</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>One exponential decay scale \(\lambda\) corresponds to a finite-dimensional Markov representation with one volatility factor.</p></div>
+      <div class="remember"><div><b>Common confusion</b>You still need the fixed parameters \(\bar V,\lambda,\eta\). “One state” means one evolving volatility state, not one total input.</div><div><b>Memory rule</b>One exponential timescale → one memory state.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="conditional gaussian stochastic volatility mixture">
-    <summary><span class="lesson-num">08</span><span><small>Conditional Gaussianity</small><strong>Why random variance creates fat tails</strong></span><em>Key bridge</em></summary>
+  <details class="lesson" data-keywords="rough heston power law kernel alpha H many timescales">
+    <summary><span class="lesson-num">08</span><span><small>Rough Heston</small><strong>The power-law kernel: memory with many timescales</strong></span><em>pp. 2–3</em></summary>
     <div class="lesson-body">
-      <div class="layer intuition"><h4>Intuition</h4><p>Inside each volatility regime, returns may look close to Gaussian. Mixing low- and high-volatility regimes makes the unconditional distribution sharply peaked with fat tails.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\frac{dS_t}{S_t}=\sqrt{V_t}\,dZ_t.\]</div></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Instead of forcing one exotic static return distribution, model a random, persistent variance process.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>Rough Heston replaces exponential short-memory behavior with a singular power-law response governed by \(H\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>With \(H<1/2\), the exponent \(H-1/2\) is negative. The kernel is therefore very large at tiny lags: very recent shocks matter intensely. But unlike one exponential, a power law does not have one characteristic decay speed. Its effect spans many horizons, which is why rough volatility behaves like a model with many memory factors.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      \alpha=H+\frac12,\qquad
+      \kappa_0(\tau)=\frac{\nu}{\Gamma(\alpha)}\tau^{\alpha-1}
+      =\frac{\nu}{\Gamma(H+1/2)}\tau^{H-1/2}.
+      \]</div><p>For \(\lambda=0\), \(d\xi_t(u)=\kappa_0(u-t)\sqrt{V_t}\,dW_t\).</p></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The power-law kernel links the empirical short-scale roughness from Lecture 2 directly to a tractable pricing model.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The singularity at \(\tau\downarrow0\) does not mean the model is automatically ill-defined; the relevant integrated quantities can remain finite.</div><div><b>Memory rule</b>Rough kernel = very strong recent response + no single memory timescale.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="cont stylized facts leverage volume volatility asymmetry">
-    <summary><span class="lesson-num">09</span><span><small>Cont stylized facts</small><strong>The checklist a volatility model should respect</strong></span><em>Review map</em></summary>
+  <details class="lesson" data-keywords="non markov rough heston path dependence forward curve state parameters">
+    <summary><span class="lesson-num">09</span><span><small>Non-Markovianity</small><strong>Why rough Heston cannot be summarized by \(V_t\) alone</strong></span><em>pp. 3–5</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Key facts include weak return autocorrelation, heavy tails, intermittency, volatility clustering, slow decay of volatility dependence, leverage, conditional heavy tails, and volume-volatility correlation.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>A model that fits one option smile but destroys these dynamics is descriptively incomplete.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>In rough Heston, two histories can arrive at the same current variance \(V_t\) yet imply different future variance behavior.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Imagine two markets both have \(V_t=4\%\). In one, variance has just fallen from a long high-volatility episode; in the other, variance has just jumped from a quiet period. A rough power-law memory can distinguish these histories even though the current number \(V_t\) is identical.</p><p>The missing information is summarized by the whole forward-variance curve \(\{\xi_t(u):u>t\}\). Once that whole curve is known, we no longer need the raw historical path. Thus rough Heston is non-Markovian in the one-dimensional state \(V_t\), but Markovian in an infinite-dimensional curve-valued state.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      E[V_u\mid\mathcal F_t]\neq E[V_u\mid V_t]\quad\text{in general},
+      \qquad
+      \text{state}=\{\xi_t(u):u>t\}.
+      \]</div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The state needed for exact rough dynamics is a function rather than one scalar, which explains both the richer memory and the numerical challenge.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Fixed parameters such as \(H,\nu,\lambda,\rho\) are still needed. The Markov question asks what <i>evolving state</i> summarizes history once those parameters are specified.</div><div><b>Memory rule</b>Classical Heston: current variance summarizes history. Rough Heston: the whole forward curve summarizes history.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="leverage effect vix negative correlation skew">
-    <summary><span class="lesson-num">10</span><span><small>Leverage effect</small><strong>Why price declines and volatility rises are linked</strong></span><em>Surface connection</em></summary>
+  <details class="lesson" data-keywords="multifactor approximation exponential kernel gamma mixture factors abi jaber">
+    <summary><span class="lesson-num">10</span><span><small>Approximation</small><strong>Why a rough kernel behaves like infinitely many exponential factors</strong></span><em>pp. 4–5</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Equity-index price moves and volatility changes are strongly negatively related.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\operatorname{Corr}(d\log S_t,d\log V_t)<0.\]</div></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Negative spot-vol correlation is a primary source of negative equity implied-volatility skew in stochastic-volatility models.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>The rough power-law kernel can be represented as a continuous mixture of exponential kernels, and then approximated by a finite sum of exponentials.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Each exponential \(e^{-x\tau}\) behaves like one Heston-style memory factor with mean-reversion speed \(x\). A power law mixes a continuum of speeds: very fast factors, medium factors, slow factors, and everything in between. That is why exact rough volatility is naturally infinite-dimensional.</p><p>The Gamma function helps derive the representation, but the reason we need many factors is <b>not</b> that Gamma generalizes factorials. The many factors come from the fact that the power law equals an integral over a continuum of exponential decay rates.</p></div>
+      <div class="layer math"><h4>Mathematics and Gamma derivation</h4><div class="eq">\[
+      \Gamma(1-\alpha)=\int_0^\infty y^{-\alpha}e^{-y}\,dy.
+      \]</div>
+      <div class="steps"><h5>From Gamma to a mixture of exponentials</h5><ol><li>Set \(y=x\tau\), so \(dy=\tau\,dx\).</li><li>Then \(\Gamma(1-\alpha)=\tau^{1-\alpha}\int_0^\infty x^{-\alpha}e^{-x\tau}dx\).</li><li>Rearrange:
+      \[
+      \tau^{\alpha-1}=\frac{1}{\Gamma(1-\alpha)}\int_0^\infty x^{-\alpha}e^{-x\tau}dx.
+      \]</li><li>Therefore
+      \[
+      \kappa_0(\tau)=\frac{\nu}{\Gamma(\alpha)\Gamma(1-\alpha)}
+      \int_0^\infty x^{-\alpha}e^{-x\tau}dx.
+      \]</li><li>Numerically discretize the integral:
+      \[
+      \kappa_0(\tau)\approx\sum_{i=1}^N w_i e^{-\lambda_i\tau}.
+      \]</li><li>Each exponential term becomes one Markov memory factor.</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>A finite multifactor model can approximate rough volatility while remaining Markovian in a larger finite-dimensional state, at the cost of more computation and parameters.</p></div>
+      <div class="remember"><div><b>Common confusion</b>\(\Gamma(n)=(n-1)!\) explains fractional-order calculus, but it is the continuum of exponential decay rates—not factorial growth—that creates the many-factor interpretation.</div><div><b>Memory rule</b>Power law = continuum of exponentials = continuum of memory timescales.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="rough volatility hurst h scaling realized variance structure function">
-    <summary><span class="lesson-num">11</span><span><small>Rough volatility</small><strong>The Hurst exponent and scaling</strong></span><em>Core concept</em></summary>
+  <details class="lesson" data-keywords="affine process definition log characteristic function linear transform">
+    <summary><span class="lesson-num">11</span><span><small>Affine definition</small><strong>What “affine” means in this course</strong></span><em>p. 5</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Log realized variance increments display power-law scaling across time horizons.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[E\left[|\log V_{t+\Delta}-\log V_t|^q\right]\propto \Delta^{qH}.\]</div></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>(H=1/2) is Brownian roughness. Empirical estimates well below (1/2) imply even more jagged volatility paths.</p></div>
-      <div class="steps"><h5>How (H) is estimated</h5><ol><li>Choose moments (q).</li><li>For each lag (Delta), compute the empirical (q)-th absolute moment of log-vol increments.</li><li>Take logs: (log m_q(\Delta)=a_q+\zeta_q\log\Delta).</li><li>The slope gives (zeta_q).</li><li>Under monofractal scaling, (zeta_q=qH), so regress (zeta_q) on (q) through the origin to estimate (H).</li></ol></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Conventional smooth Markovian volatility diffusions miss this short-scale roughness.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>An affine model has a log transform that depends on its state through a linear term plus a constant.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>“Affine” does <b>not</b> say the actual volatility path is a straight line. It says that after we move to a transform of the future distribution, the dependence on today's state becomes simple. This is like replacing a difficult nonlinear object with a coordinate system in which the state enters as \(A+B\times\text{state}\).</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      \log E[e^{zX_T}\mid X_t=x]=A(T-t,z)+B(T-t,z)x.
+      \]</div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This simple state dependence is what allows option-pricing transforms to be reduced to deterministic Riccati equations instead of solving the full stochastic system path by path.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Affine describes the transform's dependence on the state, not the shape of the sample path.</div><div><b>Memory rule</b>Affine = complicated dynamics, simple transform dependence.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="volatility surface smile skew implied volatility log moneyness">
-    <summary><span class="lesson-num">12</span><span><small>Volatility surface</small><strong>From flat Black–Scholes vol to market smiles</strong></span><em>Option data</em></summary>
+  <details class="lesson" data-keywords="affine cgf forward variance g log return distribution probability">
+    <summary><span class="lesson-num">12</span><span><small>Affine CGF</small><strong>What the affine-CGF formula is really saying</strong></span><em>p. 6</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Equity implied volatility depends on strike and maturity. Lower strikes usually trade at higher implied volatility.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[k=\log(K/F),\qquad \sigma_{\mathrm{imp}}=\sigma_{\mathrm{imp}}(k,T).\]</div></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>A useful model must fit not only one volatility level but the cross-sectional shape and its dynamics.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>For an affine forward-variance model, the conditional cumulant generating function of the future log return is linear in the entire current forward-variance curve.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Read the formula as: <b>“the future-return distribution is built from a weighted combination of today's expected future variances.”</b> The forward curve \(\xi_t(s)\) supplies the variance information; \(g(T-s;z)\) supplies the weights telling us how each horizon contributes to the transform.</p><p>The left side is <b>not a probability</b>. It is a compact encoding of the whole distribution of the future log return. This is why it is more useful than merely estimating \(E_t[S_T]\).</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      \log E_t\!\left[e^{z(X_T-X_t)}\right]
+      =\int_t^T g(T-s;z)\,\xi_t(s)\,ds,
+      \qquad X_t=\log S_t.
+      \]</div>
+      <div class="steps"><h5>Read the formula piece by piece</h5><ol><li>\(X_T-X_t=\log(S_T/S_t)\) is the future <b>log return</b>, not the dollar move \(S_T-S_t\).</li><li>\(e^{z(X_T-X_t)}=(S_T/S_t)^z\). It equals \(S_T/S_t\) only when \(z=1\).</li><li>Varying \(z\) probes different aspects of the return distribution; for characteristic functions we later use an imaginary transform argument.</li><li>\(\xi_t(s)=E_t[V_s]\) is today's expected variance at future time \(s\).</li><li>\(g(T-s;z)\) is the unknown deterministic weighting function.</li><li>The integral continuously adds the weighted contributions of all future variance horizons between \(t\) and \(T\).</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>If we can determine \(g\), then today's forward-variance curve determines the conditional transform, which in turn determines the risk-neutral terminal distribution used for option pricing.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The goal is not one forecast \(S_T\); it is the distribution of possible \(S_T\)'s. Also, \(z\) is a transform argument, not the future-time variable \(u\) in \(\xi_t(u)\).</div><div><b>Memory rule</b>CGF = weighted forward-variance curve; \(g\) is the missing set of weights.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="short maturity skew scaling t -0.23">
-    <summary><span class="lesson-num">13</span><span><small>Short-dated skew</small><strong>Power-law explosion of ATM skew</strong></span><em>Empirical restriction</em></summary>
+  <details class="lesson" data-keywords="affine theorem deterministic kernel square root V closure">
+    <summary><span class="lesson-num">13</span><span><small>Affine theorem</small><strong>Which forward-variance models are affine — and why \(\sqrt V\) matters</strong></span><em>p. 6</em></summary>
     <div class="lesson-body">
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[\text{ATM Skew}(T)=\left.\frac{\partial\sigma_{\mathrm{imp}}(k,T)}{\partial k}\right|_{k=0},\qquad |\text{Skew}(T)|\sim T^{-\gamma}.\]</div></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>Short expiries react most violently to near-term downside risk, so the skew steepens as maturity shrinks.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>The observed short-time exponent is a direct restriction on admissible volatility dynamics and is one of the main empirical arguments for rough volatility.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>The lecture characterizes affine forward-variance models by a deterministic lag kernel multiplying \(\sqrt{V_t}\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The \(\sqrt V\) form is what makes the algebra “close.” When Itô squares the diffusion term, \((\sqrt V)^2=V\). Therefore every quadratic-variation contribution is linear in \(V_t\), allowing one common factor \(V_t\) to be pulled out of the drift condition.</p><p>If the diffusion depended on a more complicated power of \(V\), Itô would generally create incompatible powers of \(V\), and the clean affine transform equation would not close in the same way.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      d\xi_t(u)=\kappa(u-t)\sqrt{V_t}\,dW_t.
+      \]</div><p>Quadratic variation gives \(d\langle \xi(u)\rangle_t\propto V_t\,dt\), exactly linear in the state.</p></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Classical Heston and rough Heston become two kernel choices inside one affine class: exponential versus power-law/Mittag-Leffler memory.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The theorem constrains the volatility of forward variance; it does not require a flat initial forward curve.</div><div><b>Memory rule</b>\(\sqrt V\) diffusion → \(V\) quadratic variation → affine closure.</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="skew stickiness ratio ssr sticky strike sticky delta beta psi">
-    <summary><span class="lesson-num">14</span><span><small>Surface dynamics</small><strong>Skew-stickiness ratio</strong></span><em>Dynamics test</em></summary>
+  <details class="lesson" data-keywords="martingale transform M affine tower conditional expectation exponential">
+    <summary><span class="lesson-num">14</span><span><small>Transform martingale</small><strong>Why we introduce \(M_t\), and why \(M_t=e^{zX_t+G_t}\)</strong></span><em>pp. 6–7</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>ATM implied volatility co-moves with spot in a fairly stable way across expiries on a given day.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[R(T)=\frac{\beta(T)}{\psi(T)}.\]</div><p>Here (psi(T)) is ATM strike skew and (eta(T)) is the spot/ATM-vol regression coefficient in quadratic-covariation form.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>Sticky delta gives (R=0); sticky strike gives (R=1). Empirical values are neither extreme and are roughly expiry-independent on a given day.</p></div>
-      <div class="layer consequence"><h4>Modeling consequence</h4><p>Matching a static smile is insufficient: the model must also reproduce how that smile moves when spot moves.</p></div>
+      <div class="layer observation"><h4>Observation</h4><p>To determine the unknown weighting function \(g\), the lecture packages the terminal transform into the process \(M_t=E_t[e^{zX_T}]\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>This is the key trick. We already know one thing about \(M_t\) before doing any algebra: because it is the conditional expectation of one fixed terminal random variable \(e^{zX_T}\), it must be a martingale. That gives us a restriction strong enough to determine \(g\).</p><p>Think of \(M_t\) as the market continually updating its estimate of the same terminal transformed payoff. New information can move that estimate up or down, but the move cannot have a predictable drift under the pricing measure.</p></div>
+      <div class="layer math"><h4>Why the exponential form appears</h4><div class="eq">\[
+      M_t=E_t[e^{zX_T}].
+      \]</div>
+      <div class="steps"><h5>Algebra + affine assumption</h5><ol><li>Write \(X_T=X_t+(X_T-X_t)\).</li><li>Then \(e^{zX_T}=e^{zX_t}e^{z(X_T-X_t)}\).</li><li>At time \(t\), \(X_t\) is known, so pull \(e^{zX_t}\) outside the conditional expectation:
+      \[
+      M_t=e^{zX_t}E_t[e^{z(X_T-X_t)}].
+      \]</li><li>Define the affine CGF
+      \[
+      G_t=\log E_t[e^{z(X_T-X_t)}]
+      =\int_t^T\xi_t(s)g(T-s;z)ds.
+      \]</li><li>Therefore \(E_t[e^{z(X_T-X_t)}]=e^{G_t}\).</li><li>Hence
+      \[
+      M_t=e^{zX_t}e^{G_t}=e^{zX_t+G_t}.
+      \]</li></ol></div>
+      <div class="steps"><h5>Why it is a martingale</h5><ol><li>For \(s<t\), \(E_s[M_t]=E_s[E_t[e^{zX_T}]]\).</li><li>By the tower property this equals \(E_s[e^{zX_T}]=M_s\).</li><li>Therefore the predictable drift of \(M_t\) must be zero.</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The zero-drift condition is how we convert the stochastic model into a deterministic equation for the unknown transform loading \(g\).</p></div>
+      <div class="remember"><div><b>Common confusion</b>We do not introduce \(M_t\) because we want another random variable. We introduce it because “conditional expectation ⇒ martingale” gives us the equation we need.</div><div><b>Memory rule</b>Introduce \(M\) so martingale zero-drift can solve for \(g\).</div></div>
     </div>
   </details>
 
-  <details class="lesson" data-keywords="zipf rank size pareto power law">
-    <summary><span class="lesson-num">15</span><span><small>Power laws</small><strong>Zipf's law as rank-size scaling</strong></span><em>pp. 1–2</em></summary>
+  <details class="lesson" data-keywords="riccati derivation log spot G dynamics g h convolution">
+    <summary><span class="lesson-num">15</span><span><small>Riccati derivation</small><strong>Step 1: where \(G_t\), \(g\), and \(h=\kappa\star g\) come from</strong></span><em>pp. 6–7</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>City sizes, firm sizes, wealth, and word frequencies often line up approximately as straight lines on log-log rank plots.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>Rank is another representation of a tail distribution. When the tail exponent is near one, size is approximately inversely proportional to rank.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">Pr(S &gt; x) ~ x<sup>−ζ</sup>; if ζ ≈ 1, then ranked size S(r) is approximately proportional to 1/r.</div></div>
-      
-      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>A rank-size plot is a fast empirical diagnostic for scale-free behavior, but only over the range where the log-log relation is stable.</p></div>
-      <div class="remember"><div><b>Common confusion</b>Zipf is not a separate idea from Pareto here; it is a rank representation of the same heavy-tail structure.</div><div><b>Memory rule</b>Tail exponent near 1 → rank-size slope near −1.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>To apply Itô to \(M_t=e^{zX_t+G_t}\), we first need the dynamics of log spot \(X_t\) and of the forward-variance integral \(G_t\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>\(g\) is the unknown set of weights in the affine CGF. When the forward-variance curve itself moves, its shock passes through the memory kernel \(\kappa\) and then through those weights \(g\). The combined effect naturally appears as the convolution \(\kappa\star g\). We often call that combined object \(h\) simply to avoid rewriting the long integral over and over.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      dX_t=-\frac12V_tdt+\sqrt{V_t}\,dZ_t,
+      \]</div><div class="eq">\[
+      G_t=\int_t^T \xi_t(s)g(T-s;z)\,ds.
+      \]</div>
+      <div class="steps"><h5>Differentiate \(G_t\)</h5><ol><li>The lower limit moves, giving
+      \[
+      -\xi_t(t)g(T-t;z)dt=-V_tg(\tau;z)dt,
+      \qquad \tau=T-t.
+      \]</li><li>The curve itself moves according to \(d\xi_t(s)=\kappa(s-t)\sqrt{V_t}dW_t\).</li><li>Insert that shock into the integral:
+      \[
+      \sqrt{V_t}dW_t\int_t^T\kappa(s-t)g(T-s;z)ds.
+      \]</li><li>Change variables to recognize a convolution:
+      \[
+      (\kappa\star g)(\tau;z)
+      =\int_0^\tau\kappa(\tau-r)g(r;z)dr.
+      \]</li><li>Thus
+      \[
+      dG_t=-V_tg(\tau;z)dt+(\kappa\star g)(\tau;z)\sqrt{V_t}dW_t.
+      \]</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>The model's memory enters the transform calculation only through the convolution \(\kappa\star g\). This is why the same derivation works for exponential and rough kernels.</p></div>
+      <div class="remember"><div><b>Common confusion</b>\(h\) is not a new economic factor. It is shorthand for the kernel-adjusted transform loading. Depending on convention, authors may define \(h=\kappa\star g\) or \(h=(\kappa\star g)/\nu\).</div><div><b>Memory rule</b>\(g\) = raw transform weights; \(h\) = those weights after memory kernel \(\kappa\) acts on them.</div></div>
     </div>
   </details>
-  <details class="lesson" data-keywords="aggregation min max sum power law">
-    <summary><span class="lesson-num">16</span><span><small>Power-law algebra</small><strong>Sums, maxima, minima, and tail dominance</strong></span><em>p. 2</em></summary>
+  <details class="lesson" data-keywords="riccati equation ito derivation convolution why option price characteristic function">
+    <summary><span class="lesson-num">16</span><span><small>Riccati derivation</small><strong>Step 2: why the Riccati equation appears and why we need it</strong></span><em>p. 7</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>The lecture lists exponent rules for combinations of independent heavy-tailed variables.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>For sums and maxima, the fattest tail dominates. For a minimum, every variable must be large at the same time, so tail probabilities multiply and exponents add.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">ζ(X₁+⋯+Xₙ) = ζ(max Xᵢ) = minᵢ ζᵢ;  ζ(min Xᵢ) = Σᵢ ζᵢ.</div></div>
-      <div class="steps"><h5>Worked steps</h5><ol><li>For a maximum, Pr(max Xᵢ &gt; x) = 1 − ∏ᵢ[1 − Pr(Xᵢ &gt; x)].</li><li>For rare tail events, the leading contribution comes from the slowest-decaying component, so the smallest exponent dominates.</li><li>For a minimum under independence, Pr(min Xᵢ &gt; x) = ∏ᵢ Pr(Xᵢ &gt; x) ~ x<sup>−Σζᵢ</sup>.</li></ol></div>
-      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>These rules explain why one very heavy-tailed component can dominate an aggregate.</p></div>
-      <div class="remember"><div><b>Common confusion</b>The formulas require the lecture's heavy-tail assumptions; they are not universal identities for arbitrary distributions.</div><div><b>Memory rule</b>Sum/max inherit the fattest tail; min adds exponents.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>The Riccati equation is not an extra modeling assumption. It is the consistency condition that makes the affine transform compatible with the stochastic dynamics.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>We guessed that the future-return transform can be written using an unknown weight \(g\). Now we must find the one \(g\) that actually matches Heston/rough-Heston dynamics. The martingale condition does exactly that.</p><p>Why “Riccati”? Itô's lemma squares diffusion terms. Since the \(G\)-diffusion contains \(h=\kappa\star g\), the quadratic variation creates an \(h^2\) term. A differential/integral equation with constant + linear + quadratic terms is a Riccati equation.</p></div>
+      <div class="layer math"><h4>Mathematics</h4>
+      <div class="eq">\[
+      d\langle X\rangle_t=V_tdt,\qquad
+      d\langle G\rangle_t=V_t h^2dt,\qquad
+      d\langle X,G\rangle_t=\rho V_t h\,dt,
+      \quad h=(\kappa\star g)(\tau;z).
+      \]</div>
+      <div class="steps"><h5>Apply Itô and force zero drift</h5><ol><li>Write \(M_t=e^{zX_t+G_t}\).</li><li>Itô gives
+      \[
+      \frac{dM_t}{M_t}=z\,dX_t+dG_t+\frac12z^2d\langle X\rangle_t+\frac12d\langle G\rangle_t+z\,d\langle X,G\rangle_t.
+      \]</li><li>Insert the \(X\) and \(G\) dynamics.</li><li>Every drift term contains the common factor \(V_tdt\).</li><li>The remaining drift coefficient is
+      \[
+      -\frac z2-g+\frac{z^2}{2}+\rho zh+\frac12h^2.
+      \]</li><li>Because \(M_t\) is a martingale, set that drift coefficient equal to zero.</li><li>Rearrange:
+      \[
+      \boxed{
+      g(\tau;z)=\frac12(z^2-z)+\rho z\,(\kappa\star g)(\tau;z)
+      +\frac12(\kappa\star g)(\tau;z)^2.}
+      \]</li></ol></div></div>
+      <div class="layer consequence"><h4>Why we care</h4><p>Solving this equation gives \(g\). Once \(g\) is known, the affine formula gives the characteristic function of the future log-return. Fourier inversion then gives the terminal risk-neutral distribution / option prices. So the practical chain is:</p><div class="eq">\[
+      \boxed{\text{Riccati solution }g
+      \longrightarrow \text{ characteristic function }
+      \longrightarrow \text{ distribution of }S_T
+      \longrightarrow \text{ option price}.}
+      \]</div></div>
+      <div class="remember"><div><b>Common confusion</b>The Riccati equation is not trying to predict one \(S_T\). It determines the transform of the entire distribution of possible \(S_T\)'s.</div><div><b>Memory rule</b>Martingale + Itô ⇒ zero drift ⇒ Riccati ⇒ characteristic function ⇒ option price.</div></div>
     </div>
   </details>
-  <details class="lesson" data-keywords="student t cubic law moments daily returns">
-    <summary><span class="lesson-num">17</span><span><small>Return tails</small><strong>Student-t, the cubic law, and finite moments</strong></span><em>pp. 7–12</em></summary>
+  <details class="lesson" data-keywords="convolution kernel g h integral memory">
+    <summary><span class="lesson-num">17</span><span><small>Convolution</small><strong>What \((\kappa\star g)(\tau)\) and \(h\) mean intuitively</strong></span><em>p. 7</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Daily SPX returns fit a Student-t far better than a Gaussian in the center and tails, with a tail exponent near three over a substantial empirical range.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>A Student-t can create both the sharp center and the frequent large moves that a Gaussian misses.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">For Student-t with ν degrees of freedom: density p(x) ~ |x|<sup>−(ν+1)</sup>, while tail probability Pr(|X| &gt; x) ~ x<sup>−ν</sup>. Variance = ν/(ν−2) for ν &gt; 2.</div></div>
-      <div class="steps"><h5>Worked steps</h5><ol><li>If ν ≈ 3, the survival-tail exponent is approximately 3.</li><li>The corresponding density exponent is approximately 4.</li><li>This is exactly the one-unit difference between tail and density exponents from Lesson 1.</li></ol></div>
-      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Gaussian risk models can materially understate the empirical frequency of large daily moves.</p></div>
-      <div class="remember"><div><b>Common confusion</b>The cubic law refers to an approximate empirical tail regime, not an exact law extending to infinity.</div><div><b>Memory rule</b>Student-t ν≈3 ↔ cubic survival tail.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>The Riccati equation never uses \(g\) alone in the volatility-shock terms; it uses the convolution of \(g\) with the memory kernel \(\kappa\).</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Imagine \(g(s)\) says how important variance at horizon \(s\) is for the return transform. The kernel \(\kappa(\tau-s)\) says how strongly today's variance shock reaches that horizon. Their convolution combines these two ideas across every intermediate lag.</p><p>Calling the result \(h\) is only bookkeeping: \(h\) is the <b>memory-adjusted version of \(g\)</b>.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      (\kappa\star g)(\tau)
+      =\int_0^\tau\kappa(\tau-s)g(s)\,ds.
+      \]</div>
+      <div class="steps"><h5>How to read the integral</h5><ol><li>Fix total horizon \(\tau\).</li><li>Choose an intermediate lag \(s\).</li><li>Read \(g(s)\): how much that horizon matters to the transform.</li><li>Read \(\kappa(\tau-s)\): how much the volatility shock survives across the remaining lag.</li><li>Multiply them.</li><li>Add those products over all \(s\in[0,\tau]\).</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Convolution notation lets one master derivation cover many volatility-memory specifications. Change \(\kappa\), and the same affine machinery still applies.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Convolution is not ordinary multiplication. Also, if a later section defines \(h=(\kappa\star g)/\nu\), that is just a rescaling chosen to simplify the rough-Heston equation.</div><div><b>Memory rule</b>Convolution = combine transform importance with volatility memory across all lags.</div></div>
     </div>
   </details>
-  <details class="lesson" data-keywords="weekly monthly aggregation central limit fat tails">
-    <summary><span class="lesson-num">18</span><span><small>Aggregation</small><strong>Why weekly and monthly returns look less extreme</strong></span><em>pp. 13–14</em></summary>
+  <details class="lesson" data-keywords="fractional calculus integral derivative gamma factorial rough">
+    <summary><span class="lesson-num">18</span><span><small>Fractional calculus</small><strong>Why Gamma and fractional integration appear in rough volatility</strong></span><em>p. 8</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>Weekly and monthly returns remain fat-tailed, but aggregation pushes their shapes somewhat closer to Gaussian behavior.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>Adding many shocks averages some idiosyncratic detail, while persistent volatility prevents rapid convergence to a simple Gaussian.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">R(t,t+m) = r(t+1) + r(t+2) + ⋯ + r(t+m).</div></div>
-      
-      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Model validation should check several horizons. A model that fits daily tails but fails weekly or monthly aggregation misses dependence structure.</p></div>
-      <div class="remember"><div><b>Common confusion</b>Closer to Gaussian does not mean Gaussian; volatility clustering slows the averaging effect.</div><div><b>Memory rule</b>Aggregation softens tails; dependence keeps them alive.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>The rough power-law kernel has exactly the same mathematical form as the kernel in a fractional integral.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>Ordinary repeated integration produces factorials and integer powers of elapsed time. The Gamma function extends factorials from integers to non-integers, allowing us to define “integration of order \(\alpha\)” even when \(\alpha\) is fractional. Rough volatility happens to use that same power-law weighting, so fractional calculus is a natural language for the model rather than an unrelated mathematical decoration.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      I^\alpha f(t)=\frac{1}{\Gamma(\alpha)}
+      \int_0^t(t-s)^{\alpha-1}f(s)\,ds,
+      \qquad
+      D^\alpha f(t)=\frac{d}{dt}I^{1-\alpha}f(t).
+      \]</div><p>For integer \(n\), \(\Gamma(n)=(n-1)!\), so this recovers ordinary repeated integration.</p></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>Once the rough convolution is recognized as \(I^\alpha\), the convolution Riccati equation can be rewritten as a fractional Riccati differential equation.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Gamma's factorial connection explains how the order of integration becomes fractional. It does not by itself explain the many-factor representation; that comes from the separate exponential-mixture identity in Lesson 10.</div><div><b>Memory rule</b>Gamma extends factorials; fractional integrals encode power-law memory.</div></div>
     </div>
   </details>
-  <details class="lesson" data-keywords="fokker planck kolmogorov diffusion density">
-    <summary><span class="lesson-num">19</span><span><small>Diffusion densities</small><strong>From an SDE to the Fokker-Planck equation</strong></span><em>pp. 14–15</em></summary>
+  <details class="lesson" data-keywords="cauchy repeated integration fractional gamma intuition">
+    <summary><span class="lesson-num">19</span><span><small>Fractional calculus</small><strong>Why repeated integration collapses to one power-law kernel</strong></span><em>p. 8</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>The lecture derives how the probability density of a diffusion evolves through time.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>Itô describes functions of individual random paths; Fokker-Planck is the corresponding evolution equation for the entire density.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">dXₜ = μ(Xₜ,t)dt + σ(Xₜ,t)dWₜ  ⇒  ∂ₜp = −∂ₓ(μp) + ½∂ₓₓ(σ²p).</div></div>
-      <div class="steps"><h5>Worked steps</h5><ol><li>Apply Itô's formula to a smooth test function f(Xₜ,t).</li><li>Take expectations; the stochastic dW term has zero expectation.</li><li>Write E[f(Xₜ,t)] as an integral of f against the density p.</li><li>Use integration by parts to move derivatives from f onto p.</li><li>Because the identity holds for suitable f, identify the PDE for p.</li></ol></div>
-      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is the bridge between path dynamics and stationary tail distributions.</p></div>
-      <div class="remember"><div><b>Common confusion</b>The SDE evolves sample paths; Fokker-Planck evolves their density.</div><div><b>Memory rule</b>SDE for paths ↔ Fokker-Planck for density.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>Cauchy's repeated-integration formula shows that doing \(n\) nested integrals is equivalent to doing one integral with a polynomial weight.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>If a value \(f(r)\) enters early, it gets carried through many later layers of integration, so it receives a larger weight. The factor \((t-r)^{n-1}\) measures how much “room” is left for those later integrations. The factorial normalizes the repeated counting.</p></div>
+      <div class="layer math"><h4>Mathematics</h4><div class="eq">\[
+      I^n f(t)=\frac{1}{(n-1)!}\int_0^t(t-s)^{n-1}f(s)\,ds.
+      \]</div>
+      <div class="steps"><h5>Worked induction step</h5><ol><li>Assume the formula holds for \(n\).</li><li>Write \(I^{n+1}f(t)=\int_0^t I^n f(s)ds\).</li><li>Insert \(I^n f(s)=\frac1{(n-1)!}\int_0^s(s-r)^{n-1}f(r)dr\).</li><li>Swap integration order over \(0\le r\le s\le t\).</li><li>The inner integral becomes
+      \[
+      \int_r^t(s-r)^{n-1}ds=\frac{(t-r)^n}{n}.
+      \]</li><li>Combine \(n(n-1)!=n!\).</li><li>Hence
+      \[
+      I^{n+1}f(t)=\frac1{n!}\int_0^t(t-r)^nf(r)dr.
+      \]</li><li>Now replace integer \(n\) by fractional \(\alpha\) and factorial by Gamma to motivate \(I^\alpha\).</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is why the rough-Heston power kernel looks exactly like a fractional integration operator.</p></div>
+      <div class="remember"><div><b>Common confusion</b>The power-law weight is not inserted arbitrarily; it is the natural kernel already generated by repeated integration.</div><div><b>Memory rule</b>Nested integrals → one weighted integral → Gamma lets the order become fractional.</div></div>
     </div>
   </details>
-  <details class="lesson" data-keywords="gabaix zeta minimum average size derivation">
-    <summary><span class="lesson-num">20</span><span><small>Power-law mechanism</small><strong>Deriving the Gabaix tail exponent</strong></span><em>pp. 15–16</em></summary>
+  <details class="lesson" data-keywords="rough heston fractional riccati lambda zero h g nu">
+    <summary><span class="lesson-num">20</span><span><small>Rough Riccati</small><strong>The \(\lambda=0\) fractional Riccati equation — and what \(h\) is doing</strong></span><em>pp. 8–9</em></summary>
     <div class="lesson-body">
-      <div class="layer observation"><h4>Observation</h4><p>A proportional-growth diffusion can generate a stationary power-law size distribution once a lower cutoff is imposed.</p></div>
-      <div class="layer intuition"><h4>Intuition</h4><p>Multiplicative growth is scale free: a one-percent shock has the same proportional meaning for a small or large object.</p></div>
-      <div class="layer math"><h4>Mathematics</h4><div class="eq">dXₜ = μXₜdt + νXₜdZₜ;  f(x) ∝ x<sup>−(ζ+1)</sup>;  ζ = 1 − 2μ/ν²;  and ζ = 1/(1 − Smin/S̄).</div></div>
-      <div class="steps"><h5>Worked steps</h5><ol><li>Set the stationary Fokker-Planck time derivative to zero.</li><li>Insert the candidate density f(x)=C x<sup>−(ζ+1)</sup> and match powers of x.</li><li>The non-degenerate solution gives ζ = 1 − 2μ/ν².</li><li>Normalize the Pareto density above Smin and compute the mean S̄ = Smin · ζ/(ζ−1).</li><li>Multiply through: S̄(ζ−1)=Smin·ζ.</li><li>Rearrange: ζ(S̄−Smin)=S̄.</li><li>Divide by S̄−Smin: ζ = S̄/(S̄−Smin) = 1/(1−Smin/S̄).</li><li>When Smin is much smaller than S̄, Smin/S̄ is close to zero, so ζ ≈ 1.</li></ol></div>
-      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>When the mean scale is much larger than the minimum scale, a Zipf-like exponent near one emerges.</p></div>
-      <div class="remember"><div><b>Common confusion</b>The approximation ζ≈1 comes from scale separation; it does not require setting Smin exactly to zero.</div><div><b>Memory rule</b>Large mean relative to minimum → ζ near 1.</div></div>
+      <div class="layer observation"><h4>Observation</h4><p>With a pure power-law kernel, the convolution in the affine Riccati equation is exactly a fractional integral. We therefore introduce \(h\) to package the memory term and then invert that fractional integral.</p></div>
+      <div class="layer intuition"><h4>Intuition</h4><p>The generic Riccati equation contains the long object \((\kappa\star g)\) repeatedly. In rough Heston, \(\kappa\star g\) is simply \(\nu\) times a fractional integral of \(g\). Defining \(h\) removes that clutter and turns an integral equation with memory into a fractional differential equation.</p><p>So \(h\) is not a new market quantity we are trying to estimate. It is a mathematical helper: the transform weight \(g\) after the rough-memory kernel has acted on it.</p></div>
+      <div class="layer math"><h4>Professor-style scaled convention</h4><div class="eq">\[
+      \kappa_0(\tau)=\frac{\nu}{\Gamma(\alpha)}\tau^{\alpha-1},
+      \qquad
+      \frac{1}{\nu}(\kappa_0\star g)=I^\alpha g.
+      \]</div>
+      <p>Define</p>
+      <div class="eq">\[
+      h:=\frac{1}{\nu}(\kappa_0\star g)=I^\alpha g.
+      \]</div>
+      <div class="steps"><h5>Worked steps</h5><ol><li>Start from the generic affine Riccati equation
+      \[
+      g=\frac12z(z-1)+\rho z(\kappa_0\star g)+\frac12(\kappa_0\star g)^2.
+      \]</li><li>Because \((\kappa_0\star g)=\nu h\), substitute \(\nu h\) everywhere:
+      \[
+      g=\frac12z(z-1)+\rho\nu z h+\frac12\nu^2h^2.
+      \]</li><li>Since \(h=I^\alpha g\), apply the fractional derivative \(D^\alpha\).</li><li>Using \(D^\alpha I^\alpha g=g\) under the relevant initial conditions,
+      \[
+      D^\alpha h=g.
+      \]</li><li>Substitute for \(g\):
+      \[
+      \boxed{
+      D^\alpha h
+      =\frac12z(z-1)+\rho\nu z h+\frac12\nu^2h^2.}
+      \]</li></ol></div></div>
+      <div class="layer consequence"><h4>Trading / modeling consequence</h4><p>This is the rough analogue of the ordinary Heston Riccati ODE. The algebraic constant/linear/quadratic structure survives; ordinary differentiation is replaced by a fractional derivative because the variance process has power-law memory.</p></div>
+      <div class="remember"><div><b>Common confusion</b>Some references instead define \(h=\kappa\star g\), in which case factors of \(\nu\) move to different places. Check the definition before comparing formulas.</div><div><b>Memory rule</b>Rough memory changes \(d/dt\) into \(D^\alpha\); the Riccati logic itself stays the same.</div></div>
     </div>
   </details>
   <details class="lesson" data-keywords="oxford man realized variance business time normalized returns">
